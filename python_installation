@@ -1,0 +1,5 @@
+If you use Linux if not all,but most of them already have python install but for some reason if you uninstalled it in order to reinstall it open
+your terminal and type: sudo apt install python
+If you use windows 11 or 10 go to python.org and download any version you like from there then open the .exe file you downloaded
+once you open it continue the installation process and give admin privillage in order to create the variables for your computer
+else do it manually by onpening and adding the variables there
