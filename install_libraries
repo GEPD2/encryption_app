@@ -1,0 +1,19 @@
+Libraries that need to be installed:
+  1) kivy
+  2) matplotlib
+  3) numpy
+  4) collections
+  5) tkinter
+  6) hashlib
+  7) platform
+Some of them are already prebuild once you install python
+
+How to install them using your terminal:
+  type these comands:
+    pip install kivy
+    pip install matplotlib
+    pip install numpy
+    pip install tkinter
+    pip install collections
+    pip install hashlib
+    pip install platform
