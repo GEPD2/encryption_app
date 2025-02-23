@@ -57,12 +57,11 @@ Builder.load_string("""
     md5:
         name: "md5"         
 <main_window>
-    canvas.before:
-        Rectangle:
-            pos: self.pos #default posistion is in the midle
-            size: self.size #screen size, the screen is the parent
-            source: "cruptography/images/g13.jpg" #source of the photo for the background
     FloatLayout:
+        Label:
+            text: "i suggest you not to encrypt a file with caesar,affine and vigener and send it over the internet,it can be decrypted easily"
+            size_hint: .4 , .05 #size settings first x axis and after y axis
+            pos: 100 , 700 #position in the screen first x axis and after y axis
         Button:
             text: "ceasar encoding" #text on the button
             id: ceasar_button #an id to call it in a function
@@ -98,13 +97,8 @@ Builder.load_string("""
             pos: 450 , 200 #position in the screen first x axis and after y axis
             on_release:
                 #after releasing the button we give it to do something inside the function,it can be whatever we want
-                app.root.current = "md5"
+                app.root.current = "md5" 
 <Caesar>:
-    canvas.before:
-        Rectangle:
-            pos: self.pos  #default posistion is in the midle
-            size: self.size  #screen size, the screen is the parent
-            source: "cruptography/images/g10.png" #source of the photo for the background
     FloatLayout:
         orientation: 'vertical' 
         Label:
@@ -112,7 +106,6 @@ Builder.load_string("""
             id: label_ceasar  #an id to call it in a function
             size_hint: .6 , .1 #size settings first x axis and after y axis
             pos: 400 , 550 #position in the screen first x axis and after y axis
-            padding: 10, 10
         TextInput:
             id: textinput_ceasar  #an id to call it in a function
             font_size: "20sp" #size of letters
@@ -164,11 +157,6 @@ Builder.load_string("""
             on_release:
                 app.root.current = "main_app"
 <Affine>:
-    canvas.before:
-        Rectangle:
-            pos: self.pos #default posistion is in the midle
-            size: self.size #screen size, the screen is the parent
-            source: "cruptography/images/g11.jpg" #source of the photo for the background
     FloatLayout:
         orientation: 'vertical' 
         Label:
@@ -176,7 +164,6 @@ Builder.load_string("""
             id: label_Affine  #an id to call it in a function
             size_hint: .5 , .1 #size settings first x axis and after y axis
             pos: 0 , 600 #position in the screen first x axis and after y axis
-            padding: 10, 10
         TextInput:
             id: textinput_affine  #an id to call it in a function
             font_size: "20sp" #size of letters
@@ -243,19 +230,13 @@ Builder.load_string("""
             on_release:
                 app.root.current = "main_app"
 <Vigener>:
-    canvas.before:
-        Rectangle:
-            pos: self.pos #default posistion is in the midle
-            size: self.size #screen size, the screen is the parent
-            source: "cruptography/images/g14.jpg" #source of the photo for the background
     FloatLayout:
         orientation: 'vertical' 
         Label:
-            text: 'vigener cypher warnings and results' #text for user
+            text: "vigener cypher warnings and results" #text for user
             id: label_vigener  #an id to call it in a function
             size_hint: .1 , .05 #size settings first x axis and after y axis
             pos: 300 , 600 #position in the screen first x axis and after y axis  
-            padding: 10, 10
         TextInput:
             id: textinput_vigener  #an id to call it in a function
             font_size: "20sp"  #size of letters
@@ -307,21 +288,13 @@ Builder.load_string("""
             on_release:
                 app.root.current = "main_app"
 <md5>:
-    canvas.before:
-        Rectangle:
-            pos: self.pos #default posistion is in the midle
-            size: self.size #screen size, the screen is the parent
-            source: "cruptography/images/g15.jpg" #source of the photo for the background
     FloatLayout:
         orientation: 'vertical'
         Label:
-            text: 'md5 results' #text for user
+            text: "md5 results" #text for user
             id: label_md5  #an id to call it in a function
             size_hint: .1 , .05 #size settings first x axis and after y axis
             pos: 300 , 600 #position in the screen first x axis and after y axis  
-            color: 'grey' #putting the color black
-            markup: True #markup is for the letters to change colour
-            padding: 10, 10
         TextInput:
             id: textinput_md5  #an id to call it in a function
             font_size: "20sp"  #size of letters
@@ -333,7 +306,7 @@ Builder.load_string("""
             id: hash_md5_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .1 , .05 #size settings first x axis and after y axis
-            pos: 1000 , 650 #position in the screen first x axis and after y axis
+            pos: 1100 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.md5_hashing()
         Button:
@@ -341,7 +314,7 @@ Builder.load_string("""
             id: hash_md5_file_compare_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .15 , .05 #size settings first x axis and after y axis
-            pos: 1000 , 650 #position in the screen first x axis and after y axis
+            pos: 800 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.compare_file()
         Button:
@@ -349,9 +322,17 @@ Builder.load_string("""
             id: hash_md5_file_hash_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .2 , .05 #size settings first x axis and after y axis
-            pos: 600 , 650 #position in the screen first x axis and after y axis
+            pos: 400 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.hash_file()
+        Button:
+            text: "compare files with hashes" #text on the button
+            id: hash_md5_files_compare_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .15 , .05 #size settings first x axis and after y axis
+            pos: 100 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.compare_files()
         Button:
             text: "back" #text on the button
             id: button_back_from_md5  #an id to call it in a function
@@ -784,43 +765,130 @@ class md5(Screen):
         label=self.ids.label_md5
         original_hash=original_hash.text
         md5_returned=""
-        file=open(file_name, 'rb')
-        # read contents of the file
-        line = file.readline().strip()
-        data=file.readline().strip()
-        md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-        while line:
-            line=file.readline().strip()
-            data = file.readline().strip()
-            # pipe contents of the file through
-            md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-        file.close()
-        # Finally compare original MD5 with freshly calculated
-        if original_hash == md5_returned:
-            label.text="MD5 verification succeed."
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name,"rb")
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find==True:
+            #we open the file in read binary mode
+            file=open(file_name, 'rb')
+            # read contents of the file
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we encrypt the data from the file by line
+                md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            # Finally compare original MD5 with freshly calculated
+            if original_hash == md5_returned:
+                label.text="MD5 verification succeed."
+            else:
+                label.text="MD5 verification failed."
         else:
-            label.text="MD5 verification failed."
+            label.text="No file given"
     def hash_file(self):
         #data to hash from file
         file_name = askopenfilename()
         #storing the memory address
         label=self.ids.label_md5
         md5_returned=""
-        file=open(file_name, 'r')
-        line = file.readline().strip()
-        data=file.readline().strip()
-        md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-        while line:
-            data = file.readline().strip() 
-            line=file.readline().strip()
-            md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-        file.close()
-        store_to_a_new_file=askdirectory()
-        store_to_a_new_file+="md5_results.txt"
-        with open(store_to_a_new_file,"w") as store:
-            data_stored=store.write(md5_returned)
-        store.close()
-    def compare_files(sself):
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name, 'r')
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find == True:
+            #we open the file in read mode
+            file=open(file_name, 'r')
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we hash the data
+                md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            #new file path
+            store_to_a_new_file=askdirectory()
+            store_to_a_new_file+="md5_results.txt"
+            if store_to_a_new_file == "md5_results.txt":
+                label.text="no directory/folder given"
+            else:
+                #we open the file and store it to a variable named store
+                with open(store_to_a_new_file,"w") as store:
+                    #we store the hashes
+                    data_stored=store.write(md5_returned)
+                #we close the file
+                store.close()
+        else:
+            label.text="no file given"
+    def compare_files(self):
+        #get paths of file_name1 and file_name2 in string format
+        file_name1=askopenfilename()
+        file_name2=askopenfilename()
+        data1=""
+        data2=""
+        md5_returned1=[]
+        md5_returned2=[]
+        label=self.ids.label_md5
+        #values if the file was given
+        find1=True
+        find2=True
+        try:
+            file1=open(file_name1,"r")
+        except TypeError:
+            #if file isn't given
+            find1=False
+        try:
+            file2=open(file_name2,"r")
+        except TypeError:
+            #if file isn't given
+            find2=False
+        if find1== True and find2== True:
+            #both files were given and we open them in read mode
+            file1=open(file_name1,"r")
+            file2=open(file_name2,"r")
+            for x in file1:
+                #we remove the \n in the ned
+                data1=x.strip()
+                #we hash
+                md5_returned1.append(hashlib.md5(data1.encode()).hexdigest()+"\n")
+            for y in file2:
+                #we remove the \n in the ned
+                data2=y.strip()
+                #we hash
+                md5_returned2.append(hashlib.md5(data2.encode()).hexdigest()+"\n")
+            #closing both files
+            file1.close()
+            file2.close()
+            #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
+            l1=len(md5_returned1)
+            l2=len(md5_returned2)
+            #is used to count the successful hashes,those that are equal
+            success=0
+            #we check if we have the same amount of hashes
+            if l1==l2:
+                #we check for successful hashes and if their number is equal with the length of the board this means all hashes are successful
+                for i in range(l1):
+                    if md5_returned1[i]==md5_returned2[i]:
+                        success+=1
+                if success == l1:
+                    label.text="all hashes are the same,so success"
+                else:
+                    label.text="some hashes are different,so it failed"
+            else:
+                label.text="one file contains more hashes than the other"
+        elif find1 == True and file2 == False:
+            label.text="file 2 is missing"
+        else:
+            label.text="file 1 is missing"
+class sha254(Screen):
+    def sha256_hashing(self):
         pass
 #defining class about the screen managment
 class MyScreenManager(ScreenManager):
