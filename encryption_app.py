@@ -55,7 +55,10 @@ Builder.load_string("""
     Vigener:
         name: "vigener"
     md5:
-        name: "md5"         
+        name: "md5"
+    sha512:
+        name: "sha512"
+             
 <main_window>
     FloatLayout:
         Label:
@@ -98,6 +101,15 @@ Builder.load_string("""
             on_release:
                 #after releasing the button we give it to do something inside the function,it can be whatever we want
                 app.root.current = "md5" 
+        Button:
+            text: "sha512 hashing"  #text on the button
+            id: sha256_button  #an id to call it in a function
+            font_size: "20sp"    #size of letters
+            size_hint: .1 , .1 #size settings first x axis and after y axis
+            pos: 250 , 200 #position in the screen first x axis and after y axis
+            on_release:
+                #after releasing the button we give it to do something inside the function,it can be whatever we want
+                app.root.current = "sha512"
 <Caesar>:
     FloatLayout:
         orientation: 'vertical' 
@@ -293,8 +305,8 @@ Builder.load_string("""
         Label:
             text: "md5 results" #text for user
             id: label_md5  #an id to call it in a function
-            size_hint: .1 , .05 #size settings first x axis and after y axis
-            pos: 300 , 600 #position in the screen first x axis and after y axis  
+            size_hint: .2 , .05 #size settings first x axis and after y axis
+            pos: 200 , 600 #position in the screen first x axis and after y axis  
         TextInput:
             id: textinput_md5  #an id to call it in a function
             font_size: "20sp"  #size of letters
@@ -306,23 +318,31 @@ Builder.load_string("""
             id: hash_md5_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .1 , .05 #size settings first x axis and after y axis
-            pos: 1100 , 650 #position in the screen first x axis and after y axis
+            pos: 1300 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.md5_hashing()
         Button:
-            text: "compare hash from file" #text on the button
+            text: "compare hash with hashed file" #text on the button
             id: hash_md5_file_compare_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .15 , .05 #size settings first x axis and after y axis
-            pos: 800 , 650 #position in the screen first x axis and after y axis
+            pos: 1000 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.compare_file()
+        Button:
+            text: "compare hash with unhashed file" #text on the button
+            id: hash_md5_file_compare_unhashed_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .15 , .05 #size settings first x axis and after y axis
+            pos: 700 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.compare_file_string()
         Button:
             text: "hash from file and store in new" #text on the button
             id: hash_md5_file_hash_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .2 , .05 #size settings first x axis and after y axis
-            pos: 400 , 650 #position in the screen first x axis and after y axis
+            pos: 300 , 650 #position in the screen first x axis and after y axis
             on_release:
                 root.hash_file()
         Button:
@@ -330,7 +350,7 @@ Builder.load_string("""
             id: hash_md5_files_compare_button  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .15 , .05 #size settings first x axis and after y axis
-            pos: 100 , 650 #position in the screen first x axis and after y axis
+            pos: 0, 650 #position in the screen first x axis and after y axis
             on_release:
                 root.compare_files()
         Button:
@@ -338,10 +358,71 @@ Builder.load_string("""
             id: button_back_from_md5  #an id to call it in a function
             font_size: "20sp" #size of letters
             size_hint: .1 , .05 #size settings first x axis and after y axis
-            pos: 1300 , 650 #position in the screen first x axis and after y axis
+            pos: 1500 , 650 #position in the screen first x axis and after y axis
             on_release:
                 app.root.current = "main_app"
-
+<sha512>:
+    FloatLayout:
+        orientation: 'vertical'
+        Label:
+            text: "sha512 results" #text for user
+            id: label_sha512  #an id to call it in a function
+            size_hint: .4 , .05 #size settings first x axis and after y axis
+            pos: 300 , 600 #position in the screen first x axis and after y axis  
+        TextInput:
+            id: textinput_sha512  #an id to call it in a function
+            font_size: "20sp"  #size of letters
+            size_hint: .4 , .05 #size settings first x axis and after y axis
+            pos: 0 , 750 #position in the screen first x axis and after y axis
+            multiline: False
+        Button:
+            text: "hash data" #text on the button
+            id: hash_sha512_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .1 , .05 #size settings first x axis and after y axis
+            pos: 1300 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.sha512_hashing()
+        Button:
+            text: "compare hash with hashed file" #text on the button
+            id: hash_sha512_file_compare_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .15 , .05 #size settings first x axis and after y axis
+            pos: 1000 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.compare_file_sha512()
+        Button:
+            text: "compare hash with unhashed file" #text on the button
+            id: hash_sha512_file_compare_unhashed_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .15 , .05 #size settings first x axis and after y axis
+            pos: 700 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.compare_file_string_sha512()
+        Button:
+            text: "hash from file and store in new" #text on the button
+            id: hash_sha512_file_hash_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .2 , .05 #size settings first x axis and after y axis
+            pos: 300 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.hash_file_sha512()
+        Button:
+            text: "compare files with hashes" #text on the button
+            id: hash_sha512_files_compare_button  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .15 , .05 #size settings first x axis and after y axis
+            pos: 0, 650 #position in the screen first x axis and after y axis
+            on_release:
+                root.compare_files_sha512()
+        Button:
+            text: "back" #text on the button
+            id: button_back_from_sha512  #an id to call it in a function
+            font_size: "20sp" #size of letters
+            size_hint: .1 , .05 #size settings first x axis and after y axis
+            pos: 1500 , 650 #position in the screen first x axis and after y axis
+            on_release:
+                app.root.current = "main_app"
 
 """)
 #defining the class that will contain the main menu
@@ -780,6 +861,40 @@ class md5(Screen):
                 #we remove the \n in the end
                 data=x.strip()
                 #we encrypt the data from the file by line
+                md5_returned+= hashlib.md5(data).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            # Finally compare original MD5 with freshly calculated
+            if original_hash == md5_returned:
+                label.text="MD5 verification succeed."
+            else:
+                label.text="MD5 verification failed."
+        else:
+            label.text="No file given"
+    def compare_file_string(self):
+        # File to check
+        file_name = askopenfilename()
+        #original hash
+        original_hash=self.ids.textinput_md5 
+        #retrive data from the memory
+        label=self.ids.label_md5
+        original_hash=original_hash.text
+        md5_returned=""
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name,"rb")
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find==True:
+            #we open the file in read binary mode
+            file=open(file_name, 'rb')
+            # read contents of the file
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we encrypt the data from the file by line
                 md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
             #we close the file
             file.close()
@@ -815,8 +930,8 @@ class md5(Screen):
             file.close()
             #new file path
             store_to_a_new_file=askdirectory()
-            store_to_a_new_file+="md5_results.txt"
-            if store_to_a_new_file == "md5_results.txt":
+            store_to_a_new_file+="/md5_results.txt"
+            if store_to_a_new_file == "/md5_results.txt":
                 label.text="no directory/folder given"
             else:
                 #we open the file and store it to a variable named store
@@ -887,9 +1002,189 @@ class md5(Screen):
             label.text="file 2 is missing"
         else:
             label.text="file 1 is missing"
-class sha254(Screen):
-    def sha256_hashing(self):
-        pass
+class sha512(Screen):
+    def sha512_hashing(self):
+        #string address
+        label=self.ids.label_sha512 
+        data=self.ids.textinput_sha512
+        #formating data from adress to text
+        data=data.text
+        #removing \n in the end
+        data=data.strip()
+        #encode data
+        data=data.encode()
+        #hash with sha512
+        hashed=hashlib.sha512(data).hexdigest()
+        #show the hash to the user by updating the text in label
+        label.text=position(hashed)
+    def compare_file_sha512(self):
+        # File to check
+        file_name = askopenfilename()
+        #original hash
+        original_hash=self.ids.textinput_sha512
+        #retrive data from the memory
+        label=self.ids.label_sha512
+        original_hash=original_hash.text
+        sha512_returned=""
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name,"rb")
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find==True:
+            #we open the file in read binary mode
+            file=open(file_name, 'rb')
+            # read contents of the file
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we encrypt the data from the file by line
+                sha512_returned+= hashlib.sha512(data).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            # Finally compare original MD5 with freshly calculated
+            if original_hash == sha512_returned:
+                label.text="sha512 verification succeed."
+            else:
+                label.text="sha512 verification failed."
+        else:
+            label.text="No file given"
+    def compare_file_string_sha512(self):
+        # File to check
+        file_name = askopenfilename()
+        #original hash
+        original_hash=self.ids.textinput_sha512
+        #retrive data from the memory
+        label=self.ids.label_sha512
+        original_hash=original_hash.text
+        sha512_returned=""
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name,"rb")
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find==True:
+            #we open the file in read binary mode
+            file=open(file_name, 'rb')
+            # read contents of the file
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we encrypt the data from the file by line
+                sha512_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            # Finally compare original MD5 with freshly calculated
+            if original_hash == sha512_returned:
+                label.text="sha512 verification succeed."
+            else:
+                label.text="sha512 verification failed."
+        else:
+            label.text="No file given"
+    def hash_file_sha512(self):
+        file_name = askopenfilename()
+        #original hash
+        original_hash=self.ids.textinput_sha512
+        #retrive data from the memory
+        label=self.ids.label_sha512
+        original_hash=original_hash.text
+        sha512_returned=""
+        #value if the file was given
+        find=True
+        try:
+            file=open(file_name, 'r')
+        except TypeError:
+            #file wasn't given
+            find=False
+        if find == True:
+            #we open the file in read mode
+            file=open(file_name, 'r')
+            for x in file:
+                #we remove the \n in the end
+                data=x.strip()
+                #we hash the data
+                sha512_returned+= hashlib.sha512(data.encode()).hexdigest()+"\n"
+            #we close the file
+            file.close()
+            #new file path
+            store_to_a_new_file=askdirectory()
+            store_to_a_new_file+="/sha512_results.txt"
+            if store_to_a_new_file == "/sha512_results.txt":
+                label.text="no directory/folder given"
+            else:
+                #we open the file and store it to a variable named store
+                with open(store_to_a_new_file,"w") as store:
+                    #we store the hashes
+                    data_stored=store.write(sha512_returned)
+                #we close the file
+                store.close()
+        else:
+            label.text="no file given"
+    def compare_files_sha512(self):
+        #get paths of file_name1 and file_name2 in string format
+        file_name1=askopenfilename()
+        file_name2=askopenfilename()
+        data1=""
+        data2=""
+        sha512_returned1=[]
+        sha512_returned2=[]
+        label=self.ids.label_sha512
+        #values if the file was given
+        find1=True
+        find2=True
+        try:
+            file1=open(file_name1,"r")
+        except TypeError:
+            #if file isn't given
+            find1=False
+        try:
+            file2=open(file_name2,"r")
+        except TypeError:
+            #if file isn't given
+            find2=False
+        if find1== True and find2== True:
+            #both files were given and we open them in read mode
+            file1=open(file_name1,"r")
+            file2=open(file_name2,"r")
+            for x in file1:
+                #we remove the \n in the ned
+                data1=x.strip()
+                #we hash
+                sha512_returned1.append(hashlib.sha512(data1.encode()).hexdigest()+"\n")
+            for y in file2:
+                #we remove the \n in the ned
+                data2=y.strip()
+                #we hash
+                sha512_returned2.append(hashlib.sha512(data2.encode()).hexdigest()+"\n")
+            #closing both files
+            file1.close()
+            file2.close()
+            #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
+            l1=len(sha512_returned1)
+            l2=len(sha512_returned2)
+            #is used to count the successful hashes,those that are equal
+            success=0
+            #we check if we have the same amount of hashes
+            if l1==l2:
+                #we check for successful hashes and if their number is equal with the length of the board this means all hashes are successful
+                for i in range(l1):
+                    if sha512_returned1[i]==sha512_returned2[i]:
+                        success+=1
+                if success == l1:
+                    label.text="all hashes are the same,so success"
+                else:
+                    label.text="some hashes are different,so it failed"
+            else:
+                label.text="one file contains more hashes than the other"
+        elif find1 == True and file2 == False:
+            label.text="file 2 is missing"
+        else:
+            label.text="file 1 is missing"
+        
 #defining class about the screen managment
 class MyScreenManager(ScreenManager):
     pass
@@ -902,22 +1197,3 @@ class cryptography(App):
 #we run the app
 if __name__=="__main__":
     cryptography().run()
-#python version 3.11.2 debian version (mostly is already installed but if you want to install it, open the terminal and type sudo apt install python)
-#installation on windows 11
-#go to python.org site and dowwnload the version you like
-#ether give admin privilage and check the create variables box or do it manually (it's up to you)
-#open (Edit the system environment variables)
-#go to Environmet variables
-#double click on Path
-#check if python path is there 
-#else press button "New"
-#paste path that you coppied before 
-#press the button named New
-#paste the previous path and add this (\Scripts)
-#press the ok button 
-#installation for matplotlib
-#open windows terminal and type pip install matplotlib
-#installation for kivy
-#pip install kivy
-#installation for numpy
-#pip install numpy
