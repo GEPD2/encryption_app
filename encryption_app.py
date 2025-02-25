@@ -42,6 +42,12 @@ import tkinter as tk
 import hashlib
 #library to check what os is used in a generic way e.g. Linux or windows
 import platform
+#generate public key
+from Crypto.PublicKey import RSA
+#encrypt data
+from Crypto.Cipher import PKCS1_OAEP
+#transformation to binary
+import binascii
 #building the app, it's main body and the Builder.load_string() will do the formating
 Builder.load_string("""
 <MyScreenManager>:
@@ -423,7 +429,6 @@ Builder.load_string("""
             pos: 1500 , 650 #position in the screen first x axis and after y axis
             on_release:
                 app.root.current = "main_app"
-
 """)
 #defining the class that will contain the main menu
 class Main_window(Screen):
@@ -1184,7 +1189,6 @@ class sha512(Screen):
             label.text="file 2 is missing"
         else:
             label.text="file 1 is missing"
-        
 #defining class about the screen managment
 class MyScreenManager(ScreenManager):
     pass
