@@ -40,14 +40,6 @@ from kivy.uix.scrollview import ScrollView
 import tkinter as tk
 #library for hashes
 import hashlib
-#library to check what os is used in a generic way e.g. Linux or windows
-import platform
-#generate public key
-from Crypto.PublicKey import RSA
-#encrypt data
-from Crypto.Cipher import PKCS1_OAEP
-#transformation to binary
-import binascii
 #building the app, it's main body and the Builder.load_string() will do the formating
 Builder.load_string("""
 <MyScreenManager>:
