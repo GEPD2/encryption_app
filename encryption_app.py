@@ -14,14 +14,6 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 #library to create the floatlayout, how the buttons,labels and generaly the objects appear
 from kivy.uix.floatlayout import FloatLayout
-#library that handles the images for the background
-from kivy.core.image import Image
-#library for the borders of an image in the background
-from kivy.graphics import BorderImage
-#libraries about the coulour of the background
-from kivy.graphics import Color, Rectangle
-#library about async images, those who are stored in the users disk
-from kivy.uix.image import AsyncImage
 #library that returns the path of the file and it's name connected in a string format for later use
 from tkinter.filedialog import askopenfilename
 #library that returns the path of a folder and its name connected in a string format for later use
@@ -34,12 +26,12 @@ import numpy as np
 from collections import Counter
 #window managment
 from kivy.core.window import Window
-#scroll event library
-from kivy.uix.scrollview import ScrollView
 #another gui library
 import tkinter as tk
 #library for hashes
 import hashlib
+#library to check what os is used in a generic way e.g. Linux or windows
+import platform
 #building the app, it's main body and the Builder.load_string() will do the formating
 Builder.load_string("""
 <MyScreenManager>:
