@@ -30,8 +30,6 @@ from kivy.core.window import Window
 import tkinter as tk
 #library for hashes
 import hashlib
-#library to check what os is used in a generic way e.g. Linux or windows
-import platform
 #building the app, it's main body and the Builder.load_string() will do the formating
 Builder.load_string("""
 <MyScreenManager>:
