@@ -1,4 +1,4 @@
-#general library about gui
+#general library about gui,kivy
 import kivy
 #library to run the app
 from kivy.app import App
