@@ -1,4 +1,3 @@
-
 #general library about gui
 import kivy
 #library to run the app
@@ -31,6 +30,8 @@ from kivy.core.window import Window
 import tkinter as tk
 #library for hashes
 import hashlib
+#library for configurations
+from kivy.config import Config
 #building the app, it's main body and the Builder.load_string() will do the formating
 Builder.load_string("""
 <MyScreenManager>:
@@ -431,6 +432,9 @@ Builder.load_string("""
             on_release:
                 app.root.current = "main_app"
 """)
+#lock screen on portrait mode
+Config.set('graphics', 'orientation', 'portrait')
+Window.orientation = 'portrait'
 #defining the class that will contain the main menu
 class Main_window(Screen):
     pass
@@ -1200,16 +1204,6 @@ class cryptography(App):
         Window.maximize()
         return MyScreenManager()
 
-#library to check the os running
-from kivy.utils import platform
-            
 #we run the app
 if __name__=="__main__":
-    if platform == 'android':
-        from jnius import autoclass
-        PythonActivity = autoclass("org.kivy.android.PythonActivity")
-        ActivityInfo = autoclass("android.content.pm.ActivityInfo")
-        activity = PythonActivity.mActivity
-        # set orientation according to user's preference
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER)
-        cryptography().run()
+    cryptography().run()
