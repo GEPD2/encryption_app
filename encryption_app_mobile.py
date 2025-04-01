@@ -1207,10 +1207,6 @@ from kivy.utils import platform
 if __name__=="__main__":
     if platform == 'android':
         from jnius import autoclass
-        from kivy.utils import platform
-
-if platform == "android":
-        from jnius import autoclass
         PythonActivity = autoclass("org.kivy.android.PythonActivity")
         ActivityInfo = autoclass("android.content.pm.ActivityInfo")
         activity = PythonActivity.mActivity
