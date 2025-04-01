@@ -1,3 +1,4 @@
+
 #general library about gui
 import kivy
 #library to run the app
@@ -1198,7 +1199,15 @@ class cryptography(App):
     def build(self):
         Window.maximize()
         return MyScreenManager()
+
+#library to check the os running
+from kivy.utils import platform
             
 #we run the app
 if __name__=="__main__":
-    cryptography().run()
+    if platform == 'android':
+        from jnius import autoclass
+        PythonActivity = autoclass('org.kivy.android.PythonActivity')
+        activity = PythonActivity.mActivity
+        activity.setRequestedOrientation(1)
+        cryptography().run()
