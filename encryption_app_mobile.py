@@ -1207,7 +1207,13 @@ from kivy.utils import platform
 if __name__=="__main__":
     if platform == 'android':
         from jnius import autoclass
-        PythonActivity = autoclass('org.kivy.android.PythonActivity')
+        from kivy.utils import platform
+
+if platform == "android":
+        from jnius import autoclass
+        PythonActivity = autoclass("org.kivy.android.PythonActivity")
+        ActivityInfo = autoclass("android.content.pm.ActivityInfo")
         activity = PythonActivity.mActivity
-        activity.setRequestedOrientation(1)
+        # set orientation according to user's preference
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER)
         cryptography().run()
