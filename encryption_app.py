@@ -1,4 +1,4 @@
-#general library about gui,kivy
+#general library about gui
 import kivy
 #library to run the app
 from kivy.app import App
@@ -433,7 +433,7 @@ def position(text) -> str: #it returns a string
     elif number <120:
         for i in range(0,len(text)):
             copy+=text[i]
-    elif number>60 and number%120!=0:
+    elif number>120 and number%120!=0:
         while n < number//120:
             n+=1
             for i in range(start,end):
@@ -444,7 +444,7 @@ def position(text) -> str: #it returns a string
         end=n*120
         for i in range (end,len(text)):
             copy+=text[i]
-    elif number>60 and number%120==0:
+    elif number>120 and number%120==0:
         while n <= number//120:
             n+=1
             for i in range(start,end):
