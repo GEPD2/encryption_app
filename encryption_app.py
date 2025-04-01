@@ -882,7 +882,7 @@ class md5(Screen):
                 #we remove the \n in the end
                 data=x.strip()
                 #we encrypt the data from the file by line
-                md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
+                md5_returned+= hashlib.md5(data).hexdigest()+"\n"
             #we close the file
             file.close()
             # Finally compare original MD5 with freshly calculated
