@@ -92,8 +92,8 @@ Use SHA-512 for cryptographic applications
 
 This tool is for educational purposes only
 
-**Hashing Algorithms (one-way)**
-**Used for passwords, checksums, and integrity verification**
+## Hashing Algorithms (one-way)
+## Used for passwords, checksums, and integrity verification
 
 - SHA-512        # Strong, widely used, secure
 - SHA-384        # Variant of SHA-512, shorter output
@@ -107,8 +107,8 @@ This tool is for educational purposes only
 - SHA-1          # Legacy, not recommended for security-critical use
 - MD5            # Broken, only for non-security checksums
 
-** Symmetric Encryption Algorithms (two-way)**
-** Used for encrypting/decrypting files or data**
+## Symmetric Encryption Algorithms (two-way)
+## Used for encrypting/decrypting files or data
 
 - AES-256-CBC    # Strong, standard, recommended\n
 - AES-192-CBC    # Secure, less common
@@ -121,16 +121,16 @@ This tool is for educational purposes only
 - Blowfish       # Legacy, moderate security
 - CAST-128       # Moderate security, faster than DES
 
-** Asymmetric Encryption Algorithms (public-key)**
-** Used for key exchange, digital signatures**
+## Asymmetric Encryption Algorithms (public-key)
+## Used for key exchange, digital signatures
 
 - RSA            # Classic, secure with 2048+ bit keys
 - ECC            # Elliptic Curve Cryptography, modern, small keys
 - ElGamal        # Secure, less common
 - DSA            # Signing only, legacy use
 
-** Message Authentication / Keyed Hash**
-** Used for verifying integrity and authentication**
+## Message Authentication / Keyed Hash
+## Used for verifying integrity and authentication
 
 - HMAC-SHA256    # Standard keyed hash for integrity
 - HMAC-SHA512    # Stronger keyed hash
