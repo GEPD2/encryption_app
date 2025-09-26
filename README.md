@@ -114,7 +114,7 @@ MD5            # Broken, only for non-security checksums
 # Used for encrypting/decrypting files or data
 # ==============================
 
-AES-256-CBC    # Strong, standard, recommended
+AES-256-CBC    # Strong, standard, recommended\n
 AES-192-CBC    # Secure, less common
 AES-128-CBC    # Moderate security, fast
 ChaCha20       # Modern, fast, secure, mobile-friendly
