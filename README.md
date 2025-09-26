@@ -97,17 +97,17 @@ This tool is for educational purposes only
 # Used for passwords, checksums, and integrity verification
 # ==============================
 
-SHA-512        # Strong, widely used, secure
-SHA-384        # Variant of SHA-512, shorter output
-SHA-256        # Standard secure hash, widely supported
-SHA-3-512      # Modern SHA-3 standard
-SHA-3-256      # Modern SHA-3 standard
-BLAKE2b        # Very fast, secure, alternative to SHA-2/3
-BLAKE2s        # Fast, for smaller outputs
-RIPEMD-160     # Legacy but secure hash
-Whirlpool      # 512-bit hash, strong
-SHA-1          # Legacy, not recommended for security-critical use
-MD5            # Broken, only for non-security checksums
+- SHA-512        # Strong, widely used, secure
+- SHA-384        # Variant of SHA-512, shorter output
+- SHA-256        # Standard secure hash, widely supported
+- SHA-3-512      # Modern SHA-3 standard
+- SHA-3-256      # Modern SHA-3 standard
+- BLAKE2b        # Very fast, secure, alternative to SHA-2/3
+- BLAKE2s        # Fast, for smaller outputs
+- RIPEMD-160     # Legacy but secure hash
+- Whirlpool      # 512-bit hash, strong
+- SHA-1          # Legacy, not recommended for security-critical use
+- MD5            # Broken, only for non-security checksums
 
 # ==============================
 # Symmetric Encryption Algorithms (two-way)
