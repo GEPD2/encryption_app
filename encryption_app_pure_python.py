@@ -80,7 +80,7 @@ class MainWindow(Screen):
         #sha button
         def go_to_sha512(instance):
             self.manager.current="sha512"
-        self.sha256_button=Button(
+        self.sha512_button=Button(
             text="sha512 hashing",
             font_size="20sp",    
             size_hint=(.1 , .1), 
@@ -97,7 +97,7 @@ class MainWindow(Screen):
         layout.add_widget(self.affine_button)
         layout.add_widget(self.vigener_button)
         layout.add_widget(self.md5_button)
-        layout.add_widget(self.sha256_button)
+        layout.add_widget(self.sha512_button)
 
         #adding the layout too
         self.add_widget(layout)
