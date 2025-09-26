@@ -35,8 +35,8 @@ All the next update and the upcoming algorithms that are on the way will be appl
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cryptography-toolbox.git
-cd cryptography-toolbox
+git clone [https://github.com/yourusername/cryptography-toolbox.git](https://github.com/GEPD2/encryption_app.git)
+cd encryption_app
 
 # Install dependencies
     pip install kivy
