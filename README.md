@@ -48,7 +48,7 @@ cd encryption_app
     pip install platform
 
 # Run the application
-python3 cryptography_app.py
+python3 cryptography_app_pure_python.py
 ```
 ## Cryptographic Components 🧩
 
