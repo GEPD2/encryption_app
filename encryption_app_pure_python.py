@@ -54,8 +54,17 @@ class MainWindow(Screen):
             text="affine encoding",
             font_size="20sp",
             size_hint= (.1 , .1),
-            pos=(350 , 400),
+            pos=(250 , 400),
             on_release=go_to_affine
+        )
+        def go_to_sha256(instance):
+            self.manager.current="sha256"
+        self.sha256_button=Button(
+            text="sha256",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(450,400),
+            on_release=go_to_sha256
         )
         #vigenere button
         def go_to_vigenere(instance):
@@ -87,17 +96,28 @@ class MainWindow(Screen):
             pos=(250 , 200),
             on_release=go_to_sha512
         )
-        #
-        #btn6=Button()
+        def go_to_sha384(instance):
+            self.manager.current="sha384"
+        self.sha384_button=Button(
+            text="sha384",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(650,400),
+            on_release=go_to_sha384
+        )
+        #more buttons
+        
         #more algorithms
 
         #adding the buttons to the layout
         layout.add_widget(label)
         layout.add_widget(self.ceasar_button)
         layout.add_widget(self.affine_button)
+        layout.add_widget(self.sha256_button)
         layout.add_widget(self.vigener_button)
         layout.add_widget(self.md5_button)
         layout.add_widget(self.sha512_button)
+        layout.add_widget(self.sha384_button)
 
         #adding the layout too
         self.add_widget(layout)
@@ -665,32 +685,18 @@ class md5(Screen):
             #then we convert the data that it has storde to text, string format and put new data
             label.text=show
         def compare_file(instance):
-            # File to check
-            file_name = askopenfilename()
+            data=read_data("file1","rb")
             #original hash
             original_hash=self.textinput_md5 
             #retrive data from the memory
             label=self.label_md5
             original_hash=original_hash.text
             md5_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name,"rb")
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find==True:
-                #we open the file in read binary mode
-                file=open(file_name, 'rb')
+            if type(data) == list:
                 # read contents of the file
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
+                for x in data:
                     #we encrypt the data from the file by line
-                    md5_returned+= hashlib.md5(data).hexdigest()+"\n"
-                #we close the file
-                file.close()
+                    md5_returned+= hashlib.md5(x.encode()).hexdigest()+"\n"
                 # Finally compare original MD5 with freshly calculated
                 if original_hash == md5_returned:
                     label.text="MD5 verification succeed."
@@ -698,33 +704,19 @@ class md5(Screen):
                     label.text="MD5 verification failed."
             else:
                 label.text="No file given"
+        #compare a hash with a string from a file
         def compare_file_string(instance):
-            # File to check
-            file_name = askopenfilename()
+            data=read_data("file1","r")
             #original hash
             original_hash=self.textinput_md5 
             #retrive data from the memory
             label=self.label_md5
             original_hash=original_hash.text
             md5_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name,"rb")
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find==True:
-                #we open the file in read binary mode
-                file=open(file_name, 'rb')
-                # read contents of the file
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
+            if type(data) == list:
+                for x in data:
                     #we encrypt the data from the file by line
-                    md5_returned+= hashlib.md5(data).hexdigest()+"\n"
-                #we close the file
-                file.close()
+                    md5_returned+= hashlib.md5(x.encode()).hexdigest()+"\n"
                 # Finally compare original MD5 with freshly calculated
                 if original_hash == md5_returned:
                     label.text="MD5 verification succeed."
@@ -733,28 +725,14 @@ class md5(Screen):
             else:
                 label.text="No file given"
         def hash_file(instance):
-            #data to hash from file
-            file_name = askopenfilename()
+            data=read_data("file1","w")
             #storing the memory address
             label=self.label_md5
             md5_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name, 'r')
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find == True:
-                #we open the file in read mode
-                file=open(file_name, 'r')
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
+            if type(data) == list:
+                for x in data:
                     #we hash the data
-                    md5_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-                #we close the file
-                file.close()
+                    md5_returned+= hashlib.md5(x.encode()).hexdigest()+"\n"
                 #new file path
                 store_to_a_new_file=askdirectory()
                 store_to_a_new_file+="/md5_results.txt"
@@ -771,43 +749,18 @@ class md5(Screen):
                 label.text="no file given"
         def compare_files(instance):
             #get paths of file_name1 and file_name2 in string format
-            file_name1=askopenfilename()
-            file_name2=askopenfilename()
-            data1=""
-            data2=""
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
             md5_returned1=[]
             md5_returned2=[]
             label=self.label_md5
-            #values if the file was given
-            find1=True
-            find2=True
-            try:
-                file1=open(file_name1,"r")
-            except TypeError:
-                #if file isn't given
-                find1=False
-            try:
-                file2=open(file_name2,"r")
-            except TypeError:
-                #if file isn't given
-                find2=False
-            if find1== True and find2== True:
-                #both files were given and we open them in read mode
-                file1=open(file_name1,"r")
-                file2=open(file_name2,"r")
-                for x in file1:
-                    #we remove the \n in the ned
-                    data1=x.strip()
+            if type(data1) == list and type(data2) == list:
+                for x in data1:
                     #we hash
-                    md5_returned1.append(hashlib.md5(data1.encode()).hexdigest()+"\n")
-                for y in file2:
-                    #we remove the \n in the ned
-                    data2=y.strip()
+                    md5_returned1.append(hashlib.md5(x.encode()).hexdigest()+"\n")
+                for y in data2:
                     #we hash
-                    md5_returned2.append(hashlib.md5(data2.encode()).hexdigest()+"\n")
-                #closing both files
-                file1.close()
-                file2.close()
+                    md5_returned2.append(hashlib.md5(y.encode()).hexdigest()+"\n")
                 #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
                 l1=len(md5_returned1)
                 l2=len(md5_returned2)
@@ -825,12 +778,18 @@ class md5(Screen):
                         label.text="some hashes are different,so it failed"
                 else:
                     label.text="one file contains more hashes than the other"
-            elif find1 == True and file2 == False:
-                label.text="file 2 is missing"
             else:
-                label.text="file 1 is missing"
+                label.text="one or both files not found"
         def go_back(instance):
             self.manager.current="main"
+        def hash_to_md5_input(instance):
+            path=askdirectory()
+            filename="/md5_results.txt"
+            file=open(path+filename,"w")
+            data=self.textinput_md5.text
+            file.write(hashlib.md5(data.encode()).hexdigest()+"\n")
+            file.close()
+            self.label_md5.text="hash stored successful"
         #buttons
         self.hash_md5_button=Button(
             text="hash data",
@@ -871,8 +830,15 @@ class md5(Screen):
             text="back",
             font_size="20sp",
             size_hint=(.1,.05),
-            pos=(1500,650),
+            pos=(1500,600),
             on_release=go_back
+        )
+        self.hash_md5_input=Button(
+            text="hash input and store it to a file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_to_md5_input
         )
         #adding widgets
         layout.add_widget(self.label_md5)
@@ -883,6 +849,7 @@ class md5(Screen):
         layout.add_widget(self.hash_md5_file_hash_button)
         layout.add_widget(self.hash_md5_files_compare_button)
         layout.add_widget(self.button_back_from_md5)
+        layout.add_widget(self.hash_md5_input)
         #adding layout too
         self.add_widget(layout)
 class sha512(Screen):
@@ -920,32 +887,14 @@ class sha512(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha512(instance):
-            # File to check
-            file_name = askopenfilename()
+            data=read_data("file1","rb")
             #original hash
             original_hash=self.textinput_sha512
             #retrive data from the memory
             label=self.label_sha512
             original_hash=original_hash.text
             sha512_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name,"rb")
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find==True:
-                #we open the file in read binary mode
-                file=open(file_name, 'rb')
-                # read contents of the file
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
-                    #we encrypt the data from the file by line
-                    sha512_returned+= hashlib.sha512(data).hexdigest()+"\n"
-                #we close the file
-                file.close()
+            if type(data) == list:
                 # Finally compare original MD5 with freshly calculated
                 if original_hash == sha512_returned:
                     label.text="sha512 verification succeed."
@@ -953,33 +902,22 @@ class sha512(Screen):
                     label.text="sha512 verification failed."
             else:
                 label.text="No file given"
+        #compare a hash with a string from a file
         def compare_file_string_sha512(instance):
             # File to check
-            file_name = askopenfilename()
+            data=read_data("file1","r")
             #original hash
             original_hash=self.textinput_sha512
             #retrive data from the memory
             label=self.label_sha512
             original_hash=original_hash.text
-            sha512_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name,"rb")
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find==True:
+            if original_hash == "":
+                label.text="No hash was given through input"
+                pass
+            sha512_returned=[]
+            if type(data) == list:
                 #we open the file in read binary mode
-                file=open(file_name, 'rb')
-                # read contents of the file
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
-                    #we encrypt the data from the file by line
-                    sha512_returned+= hashlib.md5(data.encode()).hexdigest()+"\n"
-                #we close the file
-                file.close()
+                sha512_returned.append(hashlib.sha512(data[0].encode()).hexdigest())
                 # Finally compare original MD5 with freshly calculated
                 if original_hash == sha512_returned:
                     label.text="sha512 verification succeed."
@@ -988,32 +926,14 @@ class sha512(Screen):
             else:
                 label.text="No file given"
         def hash_file_sha512(instance):
-            file_name = askopenfilename()
-            #original hash
-            original_hash=self.textinput_sha512
+            data=read_data("file1","r")
             #retrive data from the memory
             label=self.label_sha512
-            original_hash=original_hash.text
             sha512_returned=""
-            #value if the file was given
-            find=True
-            try:
-                file=open(file_name, 'r')
-            except TypeError:
-                #file wasn't given
-                find=False
-            if find == True:
-                #we open the file in read mode
-                file=open(file_name, 'r')
-                for x in file:
-                    #we remove the \n in the end
-                    data=x.strip()
-                    #we hash the data
-                    sha512_returned+= hashlib.sha512(data.encode()).hexdigest()+"\n"
-                #we close the file
-                file.close()
-                #new file path
-                store_to_a_new_file=askdirectory()
+            if type(data) == list:
+                for x in data:
+                    sha512_returned+=hashlib.sha512(x.encode()).hexdigest()+"\n"
+                store_to_a_new_file=askdirectory(title="choose directory for the new file")
                 store_to_a_new_file+="/sha512_results.txt"
                 if store_to_a_new_file == "/sha512_results.txt":
                     label.text="no directory/folder given"
@@ -1027,45 +947,16 @@ class sha512(Screen):
             else:
                 label.text="no file given"
         def compare_files_sha512(instance):
-            #get paths of file_name1 and file_name2 in string format
-            file_name1=askopenfilename()
-            file_name2=askopenfilename()
-            data1=""
-            data2=""
             sha512_returned1=[]
             sha512_returned2=[]
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
             label=self.label_sha512
-            #values if the file was given
-            find1=True
-            find2=True
-            try:
-                file1=open(file_name1,"r")
-            except TypeError:
-                #if file isn't given
-                find1=False
-            try:
-                file2=open(file_name2,"r")
-            except TypeError:
-                #if file isn't given
-                find2=False
-            if find1== True and find2== True:
-                #both files were given and we open them in read mode
-                file1=open(file_name1,"r")
-                file2=open(file_name2,"r")
-                for x in file1:
-                    #we remove the \n in the ned
-                    data1=x.strip()
-                    #we hash
-                    sha512_returned1.append(hashlib.sha512(data1.encode()).hexdigest()+"\n")
-                for y in file2:
-                    #we remove the \n in the ned
-                    data2=y.strip()
-                    #we hash
-                    sha512_returned2.append(hashlib.sha512(data2.encode()).hexdigest()+"\n")
-                #closing both files
-                file1.close()
-                file2.close()
-                #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
+            if type(data1) == list and type(data2) == list:
+                for x in data1:
+                    sha512_returned1.append(hashlib.sha512(x.encode()).hexdigest()+"\n")
+                for y in data2:
+                    sha512_returned2.append(hashlib.sha512(y.encode()).hexdigest()+"\n")
                 l1=len(sha512_returned1)
                 l2=len(sha512_returned2)
                 #is used to count the successful hashes,those that are equal
@@ -1077,17 +968,25 @@ class sha512(Screen):
                         if sha512_returned1[i]==sha512_returned2[i]:
                             success+=1
                     if success == l1:
-                        label.text="all hashes are the same,so success"
+                            label.text="all hashes are the same,so success"
                     else:
                         label.text="some hashes are different,so it failed"
                 else:
                     label.text="one file contains more hashes than the other"
-            elif find1 == True and file2 == False:
-                label.text="file 2 is missing"
             else:
-                label.text="file 1 is missing"
+                label.text="one or both files not found"
         def go_back(instance):
             self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.textinput_sha512.text
+            label=self.label_sha512
+            path=askdirectory()
+            filename="/sha512_results.txt"
+            file=open(path+filename,"w")
+            file.write(hashlib.sha512(data.encode()).hexdigest()+"\n")
+            file.close()
+            label.text="hash stored successfully"
+            
         #buttons
         self.hash_sha512_button=Button(
             text="hash data",
@@ -1128,8 +1027,15 @@ class sha512(Screen):
             text="back",
             font_size="20sp",
             size_hint=(.1,.05),
-            pos=(1500,650),
+            pos=(1500,600),
             on_release=go_back
+        )
+        self.button_sha512_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
         )
         #adding widgets
         layout.add_widget(self.label_sha512)
@@ -1140,8 +1046,405 @@ class sha512(Screen):
         layout.add_widget(self.hash_sha512_file_hash_button)
         layout.add_widget(self.hash_sha512_files_compare_button)
         layout.add_widget(self.button_back_from_sha512)
+        layout.add_widget(self.button_sha512_hash_input)
         #adding layout too
         self.add_widget(layout)
+
+class sha256(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        layout=FloatLayout()
+
+        #labels
+        self.sha256_label=Label(
+            text="sha256 output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.sha256_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def sha256_hashing(instance):
+            #string address
+            label=self.sha256_label
+            data=self.sha256_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            #hash with sha512
+            hashed=hashlib.sha256(data).hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_sha256(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.sha256_textinput
+            #retrive data from the memory
+            label=self.sha256_label
+            original_hash=original_hash.text
+            sha512_returned=""
+            if type(data) == list:
+                # Finally compare original MD5 with freshly calculated
+                if original_hash == sha512_returned:
+                    label.text="sha256 verification succeed."
+                else:
+                    label.text="sha256 verification failed."
+            else:
+                label.text="No file given"
+        def compare_file_string_sha256(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.sha256_textinput
+            #retrive data from the memory
+            label=self.sha256_label
+            original_hash=original_hash.text
+            if original_hash == "":
+                label.text="No hash was given through input"
+                pass
+            sha512_returned=[]
+            if type(data) == list:
+                #we open the file in read binary mode
+                sha512_returned.append(hashlib.sha256(data[0].encode()).hexdigest())
+                # Finally compare original MD5 with freshly calculated
+                if original_hash == sha512_returned:
+                    label.text="sha256 verification succeed."
+                else:
+                    label.text="sha256 verification failed."
+            else:
+                label.text="No file given"
+        def hash_file_sha256(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.sha256_label
+            sha512_returned=""
+            if type(data) == list:
+                for x in data:
+                    sha512_returned+=hashlib.sha256(x.encode()).hexdigest()+"\n"
+                store_to_a_new_file=askdirectory(title="choose directory for the new file")
+                store_to_a_new_file+="/sha256_results.txt"
+                if store_to_a_new_file == "/sha256_results.txt":
+                    label.text="no directory/folder given"
+                else:
+                    #we open the file and store it to a variable named store
+                    with open(store_to_a_new_file,"w") as store:
+                        #we store the hashes
+                        data_stored=store.write(sha512_returned)
+                    #we close the file
+                    store.close()
+            else:
+                label.text="no file given"
+        def compare_files_sha256(instance):
+            sha512_returned1=[]
+            sha512_returned2=[]
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.sha256_label
+            if type(data1) == list and type(data2) == list:
+                for x in data1:
+                    sha512_returned1.append(hashlib.sha256(x.encode()).hexdigest()+"\n")
+                for y in data2:
+                    sha512_returned2.append(hashlib.sha256(y.encode()).hexdigest()+"\n")
+                l1=len(sha512_returned1)
+                l2=len(sha512_returned2)
+                #is used to count the successful hashes,those that are equal
+                success=0
+                #we check if we have the same amount of hashes
+                if l1==l2:
+                    #we check for successful hashes and if their number is equal with the length of the board this means all hashes are successful
+                    for i in range(l1):
+                        if sha512_returned1[i]==sha512_returned2[i]:
+                            success+=1
+                    if success == l1:
+                            label.text="all hashes are the same,so success"
+                    else:
+                        label.text="some hashes are different,so it failed"
+                else:
+                    label.text="one file contains more hashes than the other"
+            else:
+                label.text="one or both files not found"
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.sha256_textinput.text
+            label=self.sha256_label
+            path=askdirectory()
+            filename="/sha256_results.txt"
+            file=open(path+filename,"w")
+            file.write(hashlib.sha256(data.encode()).hexdigest()+"\n")
+            file.close()
+            label.text="hash stored successfully"
+        #buttons
+        self.hash_sha256_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=sha256_hashing
+        )
+        self.hash_sha256_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_sha256
+        )
+        self.hash_sha256_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_sha256
+        )
+        self.hash_sha256_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_sha256
+        )
+        self.hash_sha256_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_sha256
+        )
+        self.button_back_from_sha256=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_sha256_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.sha256_label)
+        layout.add_widget(self.sha256_textinput)
+        layout.add_widget(self.hash_sha256_button)
+        layout.add_widget(self.hash_sha256_file_compare_button)
+        layout.add_widget(self.hash_sha256_file_compare_unhashed_button)
+        layout.add_widget(self.hash_sha256_file_hash_button)
+        layout.add_widget(self.hash_sha256_files_compare_button)
+        layout.add_widget(self.button_back_from_sha256)
+        layout.add_widget(self.button_sha256_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+class sha384(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        layout=FloatLayout()
+        #labels
+        #labels
+        self.sha384_label=Label(
+            text="sha384 output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.sha384_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def sha384_hashing(instance):
+            #string address
+            label=self.sha384_label
+            data=self.sha384_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            #hash with sha512
+            hashed=hashlib.sha384(data).hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_sha384(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.sha256_textinput
+            #retrive data from the memory
+            label=self.sha384_label
+            original_hash=original_hash.text
+            sha512_returned=""
+            if type(data) == list:
+                # Finally compare original MD5 with freshly calculated
+                if original_hash == sha512_returned:
+                    label.text="sha384 verification succeed."
+                else:
+                    label.text="sha384 verification failed."
+            else:
+                label.text="No file given"
+        def compare_file_string_sha384(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.sha384_textinput
+            #retrive data from the memory
+            label=self.sha384_label
+            original_hash=original_hash.text
+            if original_hash == "":
+                label.text="No hash was given through input"
+                pass
+            sha512_returned=[]
+            if type(data) == list:
+                #we open the file in read binary mode
+                sha512_returned.append(hashlib.sha384(data[0].encode()).hexdigest())
+                # Finally compare original MD5 with freshly calculated
+                if original_hash == sha512_returned:
+                    label.text="sha384 verification succeed."
+                else:
+                    label.text="sha384 verification failed."
+            else:
+                label.text="No file given"
+        def hash_file_sha384(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.sha384_label
+            sha512_returned=""
+            if type(data) == list:
+                for x in data:
+                    sha512_returned+=hashlib.sha384(x.encode()).hexdigest()+"\n"
+                store_to_a_new_file=askdirectory(title="choose directory for the new file")
+                store_to_a_new_file+="/sha384_results.txt"
+                if store_to_a_new_file == "/sha384_results.txt":
+                    label.text="no directory/folder given"
+                else:
+                    #we open the file and store it to a variable named store
+                    with open(store_to_a_new_file,"w") as store:
+                        #we store the hashes
+                        data_stored=store.write(sha512_returned)
+                    #we close the file
+                    store.close()
+            else:
+                label.text="no file given"
+        def compare_files_sha384(instance):
+            sha512_returned1=[]
+            sha512_returned2=[]
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.sha384_label
+            if type(data1) == list and type(data2) == list:
+                for x in data1:
+                    sha512_returned1.append(hashlib.sha384(x.encode()).hexdigest()+"\n")
+                for y in data2:
+                    sha512_returned2.append(hashlib.sha384(y.encode()).hexdigest()+"\n")
+                l1=len(sha512_returned1)
+                l2=len(sha512_returned2)
+                #is used to count the successful hashes,those that are equal
+                success=0
+                #we check if we have the same amount of hashes
+                if l1==l2:
+                    #we check for successful hashes and if their number is equal with the length of the board this means all hashes are successful
+                    for i in range(l1):
+                        if sha512_returned1[i]==sha512_returned2[i]:
+                            success+=1
+                    if success == l1:
+                            label.text="all hashes are the same,so success"
+                    else:
+                        label.text="some hashes are different,so it failed"
+                else:
+                    label.text="one file contains more hashes than the other"
+            else:
+                label.text="one or both files not found"
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.sha384_textinput.text
+            label=self.sha384_label
+            path=askdirectory()
+            filename="/sha384_results.txt"
+            file=open(path+filename,"w")
+            file.write(hashlib.sha384(data.encode()).hexdigest()+"\n")
+            file.close()
+            label.text="hash stored successfully"
+        #buttons
+        self.hash_sha384_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=sha384_hashing
+        )
+        self.hash_sha384_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_sha384
+        )
+        self.hash_sha384_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_sha384
+        )
+        self.hash_sha384_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_sha384
+        )
+        self.hash_sha384_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_sha384
+        )
+        self.button_back_from_sha384=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_sha384_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.sha384_label)
+        layout.add_widget(self.sha384_textinput)
+        layout.add_widget(self.hash_sha384_button)
+        layout.add_widget(self.hash_sha384_file_compare_button)
+        layout.add_widget(self.hash_sha384_file_compare_unhashed_button)
+        layout.add_widget(self.hash_sha384_file_hash_button)
+        layout.add_widget(self.hash_sha384_files_compare_button)
+        layout.add_widget(self.button_back_from_sha384)
+        layout.add_widget(self.button_sha384_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+
 #-----------------------------------------------------#
 #              Main Functionality
 
@@ -1219,7 +1522,7 @@ def _decrypt_caesar(text,key):
     return result
 #affine cypher encryption and decryption
 fail=False
-def affine_cipher(text, a, b, mode='encrypt'):
+def affine_cipher(text, a, b, mode):
     global fail
     fail=False
     result = ''
@@ -1249,7 +1552,24 @@ def affine_cipher(text, a, b, mode='encrypt'):
             new_char = char
         result += new_char
     return result
-
+def read_data(filenumber,mode):
+    data=[]
+    clean=""
+    find=True
+    path=askopenfilename(title=filenumber)
+    try:
+        file=open(path,mode=mode)
+    except TypeError or FileNotFoundError:
+        find=False
+    if find == True:
+        for x in file:
+            clean=x.strip()
+            data.append(clean)
+        return data
+    else:
+        return "could not find file"
+#end of main functionality
+#<------------------------------------>
 #Screen Manager
 class MyScreenManager(ScreenManager):
     def __init__(self, **kwargs):
@@ -1260,6 +1580,8 @@ class MyScreenManager(ScreenManager):
         self.add_widget(Vigener(name="vigenere"))
         self.add_widget(md5(name="md5"))
         self.add_widget(sha512(name="sha512"))
+        self.add_widget(sha256(name="sha256"))
+        self.add_widget(sha384(name="sha384"))
 
 # --------- App ---------
 class EncryptionApp(App):
