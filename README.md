@@ -45,6 +45,9 @@ pip install kivy
 pip install matplotlib
 pip install numpy
 (No need to pip install standard libraries like tkinter, collections, or hashlib — they’re already included with Python.)
+
+or you can do this to install all the nesessary labraries at once
+pip install -r requirments.txt
 ```
 Run the application
 python3 cryptography_app_pure_python.py
