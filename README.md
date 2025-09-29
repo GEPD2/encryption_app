@@ -1,6 +1,6 @@
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-# Cryptography Toolbox 🔐
+# Cryptography Toolbox
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Kivy](https://img.shields.io/badge/Kivy-2.0+-green)
@@ -9,7 +9,7 @@ A multi-algorithm encryption and hashing GUI application built with Python and K
 There are 2 .py file one is an older version made in python and kivy language and the other file is written in pure python.  
 All the next updates and the upcoming algorithms that are on the way will be applied only to the pure python file!
 
-## Features ✨
+## Features
 
 - **Classical Ciphers**:
   - Caesar cipher encryption/decryption
@@ -28,7 +28,7 @@ All the next updates and the upcoming algorithms that are on the way will be app
   - Frequency analysis visualization
   - Hash verification
 
-## Installation 📦
+## Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -54,7 +54,7 @@ python3 cryptography_app_pure_python.py
 
 ## Cryptographic Components
 
-### 🔐 Encryption Algorithms
+### Encryption Algorithms
 
 | Algorithm   | Key Requirements             | Notes                          | Security Level |
 |-------------|------------------------------|--------------------------------|----------------|
@@ -64,7 +64,7 @@ python3 cryptography_app_pure_python.py
 
 **Note**: These classical ciphers are for educational purposes only. Not secure for modern cryptographic needs.
 
-### 🔍 Hash Functions
+### Hash Functions
 
 | Function    | Output Size | Collision Resistance | Speed | Common Uses |
 |-------------|-------------|----------------------|-------|-------------|
