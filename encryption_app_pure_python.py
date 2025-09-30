@@ -1209,7 +1209,7 @@ class sha3_512(Screen):
             data=data.strip()
             #encode data
             data=data.encode()
-            hashed=hashlib.sha384(data).hexdigest()
+            hashed=hashlib.sha3_512(data).hexdigest()
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha3_512(instance):
@@ -1227,23 +1227,23 @@ class sha3_512(Screen):
             #retrive data from the memory
             label=self.sha3_512_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"384")
+            label.text=compare_file_string_(data,original_hash,"3_512")
         def hash_file_sha3_512(instance):
             data=read_data("file1","r")
             #retrive data from the memory
             label=self.sha384_label
-            label.text=hash_data_from_file(data,"sha384")
+            label.text=hash_data_from_file(data,"sha3_512")
         def compare_files_sha3_512(instance):
             data1=read_data("file1","r")
             data2=read_data("file2","r")
             label=self.sha3_512_label
-            label.text=comapre_files_functionality(data1,data2,"sha384")
+            label.text=comapre_files_functionality(data1,data2,"sha3_512")
         def go_back(instance):
             self.manager.current="main"
         def hash_input_store_to_file(instance):
             data=self.sha3_512_textinput.text
             label=self.sha3_512_label
-            label.text=hash_input_to_file(data,"sha384")
+            label.text=hash_input_to_file(data,"sha3_512")
         #buttons
         self.hash_sha3_512_button=Button(
             text="hash data",
