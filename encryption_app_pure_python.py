@@ -32,6 +32,10 @@ import hashlib
 import cryptography
 #labrary for Message Authentication - Keyed Hash
 import hmac
+#library for RIPEMD160
+from Cryptodome.Hash import RIPEMD160
+#
+import whirlpool
 
 class MainWindow(Screen):
     def __init__(self, **kwargs):
@@ -118,6 +122,60 @@ class MainWindow(Screen):
             pos=(650,300),
             on_release=go_to_sha3_512
         )
+        def go_to_sha3_256(instance):
+            self.manager.current="sha3_256"
+        self.sha3_256_button=Button(
+            text="SHA-3-256",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(650,200),
+            on_release=go_to_sha3_256
+        )
+        def go_to_blake2b(instance):
+            self.manager.current="blake2b"
+        self.blake2b_button=Button(
+            text="BLAKE2B",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(850,400),
+            on_release=go_to_blake2b
+        )
+        def go_to_blake2s(instance):
+            self.manager.current="blake2s"
+        self.blake2s_button=Button(
+            text="BLAKE2S",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(850,300),
+            on_release=go_to_blake2s
+        )
+        def go_to_ripemd160(instance):
+            self.manager.current="ripemd160"
+        self.ripemd160_button=Button(
+            text="ripemd160",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(850,200),
+            on_release=go_to_ripemd160
+        )
+        def go_to_whirpool(instance):
+            self.manager.current="WHIRPOOL"
+        self.whirpool_button=Button(
+            text="WHIRPOOL",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(1050,400),
+            on_release=go_to_whirpool
+        )
+        def go_to_sha_1(instance):
+            self.manager.current="sha_1"
+        self.sha_1_button=Button(
+            text="sha1",
+            font_size="20sp",
+            size_hint=(.1,.1),
+            pos=(1050,300),
+            on_release=go_to_sha_1
+        )
         #more buttons
         
         #more algorithms
@@ -132,6 +190,12 @@ class MainWindow(Screen):
         layout.add_widget(self.sha512_button)
         layout.add_widget(self.sha384_button)
         layout.add_widget(self.sha3_512_button)
+        layout.add_widget(self.sha3_256_button)
+        layout.add_widget(self.blake2b_button)
+        layout.add_widget(self.blake2s_button)
+        layout.add_widget(self.ripemd160_button)
+        layout.add_widget(self.whirpool_button)
+        layout.add_widget(self.sha_1_button)
 
         #adding the layout too
         self.add_widget(layout)
@@ -1231,7 +1295,7 @@ class sha3_512(Screen):
         def hash_file_sha3_512(instance):
             data=read_data("file1","r")
             #retrive data from the memory
-            label=self.sha384_label
+            label=self.sha3_512_label
             label.text=hash_data_from_file(data,"sha3_512")
         def compare_files_sha3_512(instance):
             data1=read_data("file1","r")
@@ -1280,14 +1344,14 @@ class sha3_512(Screen):
             pos=(0,650),
             on_release=compare_files_sha3_512
         )
-        self.button_back_from_sha384=Button(
+        self.button_back_from_sha3_512=Button(
             text="back",
             font_size="20sp",
             size_hint=(.1,.05),
             pos=(1500,600),
             on_release=go_back
         )
-        self.button_sha384_hash_input=Button(
+        self.button_sha3_512_hash_input=Button(
             text="hash input and store to file",
             font_size="20sp",
             size_hint=(.2,.05),
@@ -1303,8 +1367,785 @@ class sha3_512(Screen):
         layout.add_widget(self.hash_sha3_512_file_compare_unhashed_button)
         layout.add_widget(self.hash_sha3_512_file_hash_button)
         layout.add_widget(self.hash_sha3_512_files_compare_button)
-        layout.add_widget(self.button_back_from_sha384)
-        layout.add_widget(self.button_sha384_hash_input)
+        layout.add_widget(self.button_back_from_sha3_512)
+        layout.add_widget(self.button_sha3_512_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+class sha3_256(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        layout=FloatLayout()
+
+        #labels
+        self.sha3_256_label=Label(
+            text="sha3_256 output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.sha3_256_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def sha3_256_hashing(instance):
+            #string address
+            label=self.sha3_256_label
+            data=self.sha3_256_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            hashed=hashlib.sha3_256(data).hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_sha3_256(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.sha3_256_textinput.text
+            #retrive data from the memory
+            label=self.sha3_256_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_sha3_256(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.sha3_256_textinput
+            #retrive data from the memory
+            label=self.sha3_256_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"3_256")
+        def hash_file_sha3_256(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.sha3_256_label
+            label.text=hash_data_from_file(data,"sha3_256")
+        def compare_files_sha3_256(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.sha3_256_label
+            label.text=comapre_files_functionality(data1,data2,"sha3_256")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.sha3_256_textinput.text
+            label=self.sha3_256_label
+            label.text=hash_input_to_file(data,"sha3_256")
+        #buttons
+        self.hash_sha3_256_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=sha3_256_hashing
+        )
+        self.hash_sha3_256_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_sha3_256
+        )
+        self.hash_sha3_256_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_sha3_256
+        )
+        self.hash_sha3_256_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_sha3_256
+        )
+        self.hash_sha3_256_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_sha3_256
+        )
+        self.button_back_from_sha3_256=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_sha3_256_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.sha3_256_label)
+        layout.add_widget(self.sha3_256_textinput)
+        layout.add_widget(self.hash_sha3_256_button)
+        layout.add_widget(self.hash_sha3_256_file_compare_button)
+        layout.add_widget(self.hash_sha3_256_file_compare_unhashed_button)
+        layout.add_widget(self.hash_sha3_256_file_hash_button)
+        layout.add_widget(self.hash_sha3_256_files_compare_button)
+        layout.add_widget(self.button_back_from_sha3_256)
+        layout.add_widget(self.button_sha3_256_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+class BLAKE2b(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=FloatLayout()
+
+        #labels
+        self.blake2b_label=Label(
+            text="blake2b output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.blake2b_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def blake2b_hashing(instance):
+            #string address
+            label=self.blake2b_label
+            data=self.blake2b_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            hashed=hashlib.blake2b(data).hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_blake2b(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.blake2b_textinput.text
+            #retrive data from the memory
+            label=self.blake2b_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_blake2b(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.blake2b_textinput
+            #retrive data from the memory
+            label=self.blake2b_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"BLAKE2b")
+        def hash_file_blake2b(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.blake2b_label
+            label.text=hash_data_from_file(data,"BLAKE2b")
+        def compare_files_blake2b(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.blake2b_label
+            label.text=comapre_files_functionality(data1,data2,"BLAKE2b")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.blake2b_textinput.text
+            label=self.blake2b_label
+            label.text=hash_input_to_file(data,"BLAKE2b")
+        #buttons
+        self.hash_blake2b_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=blake2b_hashing
+        )
+        self.hash_blake2b_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_blake2b
+        )
+        self.hash_blake2b_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_blake2b
+        )
+        self.hash_blake2b_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_blake2b
+        )
+        self.hash_blake2b_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_blake2b
+        )
+        self.button_back_from_blake2b=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_blake2b_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.blake2b_label)
+        layout.add_widget(self.blake2b_textinput)
+        layout.add_widget(self.hash_blake2b_button)
+        layout.add_widget(self.hash_blake2b_file_compare_button)
+        layout.add_widget(self.hash_blake2b_file_compare_unhashed_button)
+        layout.add_widget(self.hash_blake2b_file_hash_button)
+        layout.add_widget(self.hash_blake2b_files_compare_button)
+        layout.add_widget(self.button_back_from_blake2b)
+        layout.add_widget(self.button_blake2b_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+class BLAKE2s(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=FloatLayout()
+
+        #labels
+        self.blake2s_label=Label(
+            text="blake2s output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.blake2s_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def blake2s_hashing(instance):
+            #string address
+            label=self.blake2s_label
+            data=self.blake2s_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            hashed=hashlib.blake2s(data).hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_blake2s(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.blake2s_textinput.text
+            #retrive data from the memory
+            label=self.blake2s_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_blake2s(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.blake2s_textinput
+            #retrive data from the memory
+            label=self.blake2s_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"BLAKE2s")
+        def hash_file_blake2s(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.blake2s_label
+            label.text=hash_data_from_file(data,"BLAKE2s")
+        def compare_files_blake2s(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.blake2s_label
+            label.text=comapre_files_functionality(data1,data2,"BLAKE2s")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.blake2s_textinput.text
+            label=self.blake2s_label
+            label.text=hash_input_to_file(data,"BLAKE2s")
+        #buttons
+        self.hash_blake2s_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=blake2s_hashing
+        )
+        self.hash_blake2s_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_blake2s
+        )
+        self.hash_blake2s_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_blake2s
+        )
+        self.hash_blake2s_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_blake2s
+        )
+        self.hash_blake2s_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_blake2s
+        )
+        self.button_back_from_blake2s=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_blake2s_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.blake2s_label)
+        layout.add_widget(self.blake2s_textinput)
+        layout.add_widget(self.hash_blake2s_button)
+        layout.add_widget(self.hash_blake2s_file_compare_button)
+        layout.add_widget(self.hash_blake2s_file_compare_unhashed_button)
+        layout.add_widget(self.hash_blake2s_file_hash_button)
+        layout.add_widget(self.hash_blake2s_files_compare_button)
+        layout.add_widget(self.button_back_from_blake2s)
+        layout.add_widget(self.button_blake2s_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+class RIPEMD_160(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=FloatLayout()
+
+        #labels
+        self.ripemd_160_label=Label(
+            text="ripemd160 output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.ripemd_160_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def ripemd_160_hashing(instance):
+            #string address
+            label=self.ripemd_160_label
+            data=self.ripemd_160_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            h=RIPEMD160.new()
+            h.update(data)
+            hashed=h.hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_ripemd_160(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.ripemd_160_textinput.text
+            #retrive data from the memory
+            label=self.ripemd_160_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_ripemd_160(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.ripemd_160_textinput
+            #retrive data from the memory
+            label=self.ripemd_160_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"RIPEMD-160")
+        def hash_file_ripemd_160(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.ripemd_160_label
+            label.text=hash_data_from_file(data,"RIPEMD-160")
+        def compare_files_ripemd_160(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.ripemd_160_label
+            label.text=comapre_files_functionality(data1,data2,"RIPEMD-160")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.ripemd_160_textinput.text
+            label=self.ripemd_160_label
+            label.text=hash_input_to_file(data,"RIPEMD-160")
+        #buttons
+        self.hash_ripemd_160_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=ripemd_160_hashing
+        )
+        self.hash_ripemd_160_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_ripemd_160
+        )
+        self.hash_ripemd_160_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_ripemd_160
+        )
+        self.hash_ripemd_160_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_ripemd_160
+        )
+        self.hash_ripemd_160_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_ripemd_160
+        )
+        self.button_back_from_ripemd_160=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_ripemd_160_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.ripemd_160_label)
+        layout.add_widget(self.ripemd_160_textinput)
+        layout.add_widget(self.hash_ripemd_160_button)
+        layout.add_widget(self.hash_ripemd_160_file_compare_button)
+        layout.add_widget(self.hash_ripemd_160_file_compare_unhashed_button)
+        layout.add_widget(self.hash_ripemd_160_file_hash_button)
+        layout.add_widget(self.hash_ripemd_160_files_compare_button)
+        layout.add_widget(self.button_back_from_ripemd_160)
+        layout.add_widget(self.button_ripemd_160_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+
+class WHirlpool(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=FloatLayout()
+
+        #labels
+        self.Whirlpool_label=Label(
+            text="Whirlpool output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.Whirlpool_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def Whirlpool_hashing(instance):
+            #string address
+            label=self.Whirlpool_label
+            data=self.Whirlpool_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            h=whirlpool.new()
+            h.update(data)
+            hashed=h.hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_Whirlpool(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.Whirlpool_textinput.text
+            #retrive data from the memory
+            label=self.Whirlpool_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_Whirlpool(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.Whirlpool_textinput
+            #retrive data from the memory
+            label=self.Whirlpool_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"Whirlpool")
+        def hash_file_Whirlpool(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.Whirlpool_label
+            label.text=hash_data_from_file(data,"Whirlpool")
+        def compare_files_Whirlpool(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.Whirlpool_label
+            label.text=comapre_files_functionality(data1,data2,"Whirlpool")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.Whirlpool_textinput.text
+            label=self.Whirlpool_label
+            label.text=hash_input_to_file(data,"Whirlpool")
+        #buttons
+        self.hash_Whirlpool_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=Whirlpool_hashing
+        )
+        self.hash_Whirlpool_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_Whirlpool
+        )
+        self.hash_Whirlpool_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_Whirlpool
+        )
+        self.hash_Whirlpool_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_Whirlpool
+        )
+        self.hash_Whirlpool_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_Whirlpool
+        )
+        self.button_back_from_Whirlpool=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_Whirlpool_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.Whirlpool_label)
+        layout.add_widget(self.Whirlpool_textinput)
+        layout.add_widget(self.hash_Whirlpool_button)
+        layout.add_widget(self.hash_Whirlpool_file_compare_button)
+        layout.add_widget(self.hash_Whirlpool_file_compare_unhashed_button)
+        layout.add_widget(self.hash_Whirlpool_file_hash_button)
+        layout.add_widget(self.hash_Whirlpool_files_compare_button)
+        layout.add_widget(self.button_back_from_Whirlpool)
+        layout.add_widget(self.button_Whirlpool_hash_input)
+
+        #adding layout too
+        self.add_widget(layout)
+
+class sha_1(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=FloatLayout()
+
+        #labels
+        self.sha_1_label=Label(
+            text="sha1 output",
+            size_hint=(.4,.05),
+            pos=(300,600)
+        )
+        #textinputs
+        self.sha_1_textinput=TextInput(
+            font_size="20sp",
+            size_hint=(.4,.05),
+            pos=(0,750),
+            multiline=False
+        )
+        #functionality
+        def sha_1_hashing(instance):
+            #string address
+            label=self.sha_1_label
+            data=self.sha_1_textinput
+            #formating data from adress to text
+            data=data.text
+            #removing \n in the end
+            data=data.strip()
+            #encode data
+            data=data.encode()
+            h=RIPEMD160.new()
+            h.update(data)
+            hashed=h.hexdigest()
+            #show the hash to the user by updating the text in label
+            label.text=position(hashed)
+        def compare_file_sha_1(instance):
+            data=read_data("file1","rb")
+            #original hash
+            original_hash=self.sha_1_textinput.text
+            #retrive data from the memory
+            label=self.sha_1_label
+            label.text=compare(data=data,hashreturned=original_hash)
+        def compare_file_string_sha_1(instance):
+            # File to check
+            data=read_data("file1","r")
+            #original hash
+            original_hash=self.sha_1_textinput
+            #retrive data from the memory
+            label=self.sha_1_label
+            original_hash=original_hash.text
+            label.text=compare_file_string_(data,original_hash,"sha_1")
+        def hash_file_sha_1(instance):
+            data=read_data("file1","r")
+            #retrive data from the memory
+            label=self.sha_1_label
+            label.text=hash_data_from_file(data,"sha_1")
+        def compare_files_sha_1(instance):
+            data1=read_data("file1","r")
+            data2=read_data("file2","r")
+            label=self.sha_1_label
+            label.text=comapre_files_functionality(data1,data2,"sha_1")
+        def go_back(instance):
+            self.manager.current="main"
+        def hash_input_store_to_file(instance):
+            data=self.sha_1_textinput.text
+            label=self.sha_1_label
+            label.text=hash_input_to_file(data,"sha_1")
+        #buttons
+        self.hash_sha_1_button=Button(
+            text="hash data",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1300,650),
+            on_release=sha_1_hashing
+        )
+        self.hash_sha_1_file_compare_button=Button(
+            text="compare hash with hashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(1000,650),
+            on_release=compare_file_sha_1
+        )
+        self.hash_sha_1_file_compare_unhashed_button=Button(
+            text="compare hash with unhashed file",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(700,650),
+            on_release=compare_file_string_sha_1
+        )
+        self.hash_sha_1_file_hash_button=Button(
+            text="hash from file and store in new",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(300,650),
+            on_release=hash_file_sha_1
+        )
+        self.hash_sha_1_files_compare_button=Button(
+            text="compare files with hashes",
+            font_size="20sp",
+            size_hint=(.15,.05),
+            pos=(0,650),
+            on_release=compare_files_sha_1
+        )
+        self.button_back_from_sha_1=Button(
+            text="back",
+            font_size="20sp",
+            size_hint=(.1,.05),
+            pos=(1500,600),
+            on_release=go_back
+        )
+        self.button_sha_1_hash_input=Button(
+            text="hash input and store to file",
+            font_size="20sp",
+            size_hint=(.2,.05),
+            pos=(1500,650),
+            on_release=hash_input_store_to_file
+        )
+
+        #adding widgets
+        layout.add_widget(self.sha_1_label)
+        layout.add_widget(self.sha_1_textinput)
+        layout.add_widget(self.hash_sha_1_button)
+        layout.add_widget(self.hash_sha_1_file_compare_button)
+        layout.add_widget(self.hash_sha_1_file_compare_unhashed_button)
+        layout.add_widget(self.hash_sha_1_file_hash_button)
+        layout.add_widget(self.hash_sha_1_files_compare_button)
+        layout.add_widget(self.button_back_from_sha_1)
+        layout.add_widget(self.button_sha_1_hash_input)
 
         #adding layout too
         self.add_widget(layout)
@@ -1460,6 +2301,19 @@ def compare_file_string_(data,original_hash,hash_algo):
             hash_returned.append(hashlib.sha3_256(data[0].encode()).hexdigest())
         elif hash_algo == "md5":
             hash_returned.append(hashlib.md5(data[0].encode()).hexdigest())
+        elif hash_algo == "BLAKE2b":
+            hash_returned.append(hashlib.blake2b(data[0].encode()).hexdigest())
+        elif hash_algo == "BLAKE2s":
+            hash_returned.append(hashlib.blake2s(data[0].encode()).hexdigest())
+        elif hash_algo == "RIPEMD-160":
+            h=RIPEMD160.new()
+            h.update(data[0].encode())
+            hash_returned.append(h.hexdigest())
+        elif hash_algo == "Whirlpool":
+            h=whirlpool.new(data[0].encode())
+            hash_returned.append(h.hexdigest())
+        elif hash_algo == "sha_1":
+            hash_returned.append(hashlib.sha1(data[0].encode()).hexdigest())
         if hash_[0] == hash_returned[0]:
             return"verification succeed."
         else:
@@ -1487,6 +2341,25 @@ def hash_data_from_file(data,algorithm):
         elif algorithm == "sha3-256":
             for x in data:
                     hash_returned+= hashlib.sha3_256(x.encode()).hexdigest()+"\n"
+        elif algorithm == "BLAKE2b":
+            for x in data:
+                    hash_returned+= hashlib.blake2b(x.encode()).hexdigest()+"\n"
+        elif algorithm == "BLAKE2s":
+            for x in data:
+                    hash_returned+= hashlib.blake2s(x.encode()).hexdigest()+"\n"
+        elif algorithm == "RIPEMD-160":
+            h=RIPEMD160.new()
+            for x in data:
+                h.update(x.encode())
+                hash_returned+=h.hexdigest()+"\n"
+        elif algorithm == "Whirlpool":
+            h=whirlpool.new()
+            for x in data:
+                h.update(x.encode())
+                hash_returned+=h.hexdigest()+"\n"
+        elif algorithm == "sha_1":
+            for x in data:
+                    hash_returned+= hashlib.sha1(x.encode()).hexdigest()+"\n"
         #new file path
         store_to_a_new_file=askdirectory()
         store_to_a_new_file+="/{}_results.txt".format(algorithm)
@@ -1536,6 +2409,39 @@ def comapre_files_functionality(data1,data2,algorithm):
                 hash1_returned1.append(hashlib.sha3_256(x.encode()).hexdigest()+"\n")
             for y in data2:
                 hash2_returned2.append(hashlib.sha3_256(y.encode()).hexdigest()+"\n")
+        elif algorithm == "BLAKE2b":
+            for x in data1:
+                hash1_returned1.append(hashlib.blake2b(x.encode()).hexdigest()+"\n")
+            for y in data2:
+                hash2_returned2.append(hashlib.blake2b(y.encode()).hexdigest()+"\n")
+        elif algorithm == "BLAKE2s":
+            for x in data1:
+                hash1_returned1.append(hashlib.blake2s(x.encode()).hexdigest()+"\n")
+            for y in data2:
+                hash2_returned2.append(hashlib.blake2s(y.encode()).hexdigest()+"\n")
+        elif algorithm == "RIPEMD-160":
+            for x in data1:
+                h=RIPEMD160.new()
+                h.update(x.encode())
+                hash1_returned1.append(h.hexdigest()+"\n")
+            for y in data2:
+                h=RIPEMD160.new()
+                h.update(y.encode())
+                hash2_returned2.append(h.hexdigest()+"\n")
+        elif algorithm == "Whirlpool":
+            for x in data1:
+                h=whirlpool.new()
+                h.update(x.encode())
+                hash1_returned1.append(h.hexdigest()+"\n")
+            for y in data2:
+                h=whirlpool.new()
+                h.update(y.encode())
+                hash2_returned2.append(h.hexdigest()+"\n")
+        elif algorithm == "sha_1":
+            for x in data1:
+                hash2_returned2.append(hashlib.sha1(x.encode()).hexdigest()+"\n")
+            for y in data2:
+                hash2_returned2.append(hashlib.sha1(y.encode()).hexdigest()+"\n")
         #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
         l1=len(hash1_returned1)
         l2=len(hash2_returned2)
@@ -1571,6 +2477,19 @@ def hash_input_to_file(data,algorithm):
         file.write(hashlib.sha3_512(data.encode()).hexdigest()+"\n")
     elif algorithm == "sha3_256":
         file.write(hashlib.sha3_256(data.encode()).hexdigest()+"\n")
+    elif algorithm == "BLAKE2b":
+        file.write(hashlib.blake2b(data.encode()).hexdigest()+"\n")
+    elif algorithm == "BLAKE2s":
+        file.write(hashlib.blake2s(data.encode()).hexdigest()+"\n")
+    elif algorithm == "RIPEMD-160":
+        h=RIPEMD160.new()
+        h.update(data.encode())
+        file.write(h.hexdigest())
+    elif algorithm == "Whirlpool":
+        h=whirlpool.new(data.encode())
+        file.write(h.hexdigest())
+    elif algorithm == "sha_1":
+        file.write(hashlib.sha1(data.encode()).hexdigest())
     file.close()
     return "hash stored successfully"
 #end of main functionality
@@ -1588,14 +2507,17 @@ class MyScreenManager(ScreenManager):
         self.add_widget(sha256(name="sha256"))
         self.add_widget(sha384(name="sha384"))
         self.add_widget(sha3_512(name="sha3_512"))
-
+        self.add_widget(sha3_256(name="sha3_256"))
+        self.add_widget(BLAKE2b(name="blake2b"))
+        self.add_widget(BLAKE2s(name="blake2s"))
+        self.add_widget(RIPEMD_160(name="ripemd160"))
+        self.add_widget(WHirlpool(name="WHIRPOOL"))
+        self.add_widget(sha_1(name="sha_1"))
 # --------- App ---------
 class EncryptionApp(App):
     def build(self):
         Window.maximize()
         return MyScreenManager()
-
-
+    
 if __name__ == "__main__":
     EncryptionApp().run()
-
