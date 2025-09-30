@@ -2048,9 +2048,7 @@ class sha_1(Screen):
             data=data.strip()
             #encode data
             data=data.encode()
-            h=RIPEMD160.new()
-            h.update(data)
-            hashed=h.hexdigest()
+            hashed=hashlib.sha1(data).hexdigest()
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha_1(instance):
