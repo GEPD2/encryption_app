@@ -1,2637 +1,996 @@
-#general library about gui
-import kivy
-#library to run the app
+# library to run the app
 from kivy.app import App
-#library for the screen managment, the screen gui and the transition which is a fade one 
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
-#library for creating a button
 from kivy.uix.button import Button
-#library to create a label
 from kivy.uix.label import Label
-#library to create a textinput
 from kivy.uix.textinput import TextInput
-#library to create the floatlayout, how the buttons,labels and generaly the objects appear
 from kivy.uix.floatlayout import FloatLayout
-#library that returns the path of the file and it's name connected in a string format for later use
-from tkinter.filedialog import askopenfilename
-#library that returns the path of a folder and its name connected in a string format for later use
-from tkinter.filedialog import askdirectory
-#library to plot the data in the matplotlib
-import matplotlib.pyplot as plt
-#library that will create the x axxis for the plot
-import numpy as np
-#library that counts letters in a given string
-from collections import Counter
-#window managment
+from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
-#another gui library
-import tkinter as tk
-#library for hashes
+from tkinter.filedialog import askopenfilename, askdirectory
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import Counter
 import hashlib
-#library for cryptography
-import cryptography
-#labrary for Message Authentication - Keyed Hash
-import hmac
-#library for RIPEMD160
 from Cryptodome.Hash import RIPEMD160
-#
 import whirlpool
 
-class MainWindow(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        
-        layout=FloatLayout()
+# ==================== UTILITY FUNCTIONS ====================
 
-        label=Label(text="i suggest you not to encrypt a file with caesar,affine and vigener and send it over the internet,it can be decrypted easily",
-                    size_hint=(.4, .1),pos=(100,700))
-        #ceasar button
-        def go_to_caesar(instance):
-            self.manager.current = "caesar"
-        self.ceasar_button = Button(
-            text="ceasar encoding",
-            font_size="20sp",
-            size_hint=(.1, .1),
-            pos=(250, 300),
-            on_release=go_to_caesar  #lambda x: setattr(self.manager, "current", "caesar")
-        )
-        #affine button
-        def go_to_affine(instance):
-            self.manager.current= "affine"
-        self.affine_button=Button(
-            text="affine encoding",
-            font_size="20sp",
-            size_hint= (.1 , .1),
-            pos=(250 , 400),
-            on_release=go_to_affine
-        )
-        def go_to_sha256(instance):
-            self.manager.current="sha256"
-        self.sha256_button=Button(
-            text="sha256",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(450,400),
-            on_release=go_to_sha256
-        )
-        #vigenere button
-        def go_to_vigenere(instance):
-            self.manager.current="vigenere"
-        self.vigener_button=Button(
-            text="vigener encoding",
-            font_size="20sp",
-            size_hint=(.1 , .1),
-            pos=(450 , 300),
-            on_release=go_to_vigenere
-        )
-        #md5 button
-        def go_to_md5(instance):
-            self.manager.current="md5"
-        self.md5_button=Button(
-            text="md5 hashing",
-            font_size="20sp",
-            size_hint=(.1 , .1),
-            pos=(450 , 200),
-            on_release=go_to_md5
-        )
-        #sha button
-        def go_to_sha512(instance):
-            self.manager.current="sha512"
-        self.sha512_button=Button(
-            text="sha512 hashing",
-            font_size="20sp",    
-            size_hint=(.1 , .1), 
-            pos=(250 , 200),
-            on_release=go_to_sha512
-        )
-        def go_to_sha384(instance):
-            self.manager.current="sha384"
-        self.sha384_button=Button(
-            text="sha384",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(650,400),
-            on_release=go_to_sha384
-        )
-        def go_to_sha3_512(instance):
-            self.manager.current="sha3_512"
-        self.sha3_512_button=Button(
-            text="SHA-3-512",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(650,300),
-            on_release=go_to_sha3_512
-        )
-        def go_to_sha3_256(instance):
-            self.manager.current="sha3_256"
-        self.sha3_256_button=Button(
-            text="SHA-3-256",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(650,200),
-            on_release=go_to_sha3_256
-        )
-        def go_to_blake2b(instance):
-            self.manager.current="blake2b"
-        self.blake2b_button=Button(
-            text="BLAKE2B",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(850,400),
-            on_release=go_to_blake2b
-        )
-        def go_to_blake2s(instance):
-            self.manager.current="blake2s"
-        self.blake2s_button=Button(
-            text="BLAKE2S",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(850,300),
-            on_release=go_to_blake2s
-        )
-        def go_to_ripemd160(instance):
-            self.manager.current="ripemd160"
-        self.ripemd160_button=Button(
-            text="ripemd160",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(850,200),
-            on_release=go_to_ripemd160
-        )
-        def go_to_whirpool(instance):
-            self.manager.current="WHIRPOOL"
-        self.whirpool_button=Button(
-            text="WHIRPOOL",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(1050,400),
-            on_release=go_to_whirpool
-        )
-        def go_to_sha_1(instance):
-            self.manager.current="sha_1"
-        self.sha_1_button=Button(
-            text="sha1",
-            font_size="20sp",
-            size_hint=(.1,.1),
-            pos=(1050,300),
-            on_release=go_to_sha_1
-        )
-        #more buttons
-        
-        #more algorithms
-
-        #adding the buttons to the layout
-        layout.add_widget(label)
-        layout.add_widget(self.ceasar_button)
-        layout.add_widget(self.affine_button)
-        layout.add_widget(self.sha256_button)
-        layout.add_widget(self.vigener_button)
-        layout.add_widget(self.md5_button)
-        layout.add_widget(self.sha512_button)
-        layout.add_widget(self.sha384_button)
-        layout.add_widget(self.sha3_512_button)
-        layout.add_widget(self.sha3_256_button)
-        layout.add_widget(self.blake2b_button)
-        layout.add_widget(self.blake2s_button)
-        layout.add_widget(self.ripemd160_button)
-        layout.add_widget(self.whirpool_button)
-        layout.add_widget(self.sha_1_button)
-
-        #adding the layout too
-        self.add_widget(layout)
-
-class Caesar(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels 
-        self.label_ceasar=Label(
-            text="caesar results and warnings! No numbers included or space or special characters aren getting encrypted.",
-            size_hint=(.6,.1),
-            pos=(400,550)
-        )
-        label=Label(
-            text="Give the key. It must be greater than 0 of course.",
-            size_hint=(.6,.1),
-            pos=(400,750)
-        )
-
-        #text inputs
-        self.textinput_ceasar=TextInput(
-            font_size="20sp",
-            size_hint=(.5,.04),
-            pos=(500,850),
-            multiline=False
-        )
-        self.textinput_ceasar_key=TextInput(
-            multiline=False,
-            font_size="20sp",
-            size_hint=(.5,.05),
-            pos=(500,700)
-        )
-        #encoding
-        def encode_caesar(instance):
-            #storing the memory address
-            unencrypted_ceasar=self.textinput_ceasar
-            #then we convert the data that it has storde to text, string format
-            unencrypted_ceasar=unencrypted_ceasar.text
-            encrypted=""
-            #storing the memory address
-            caesar_key=self.textinput_ceasar_key
-            #then we convert the data that it has storde to text, string format
-            caesar_key=caesar_key.text
-            #storing the memory address
-            message=self.label_ceasar
-            if caesar_key == "":
-                message.text="no key given"
-            else:
-                #converting the key1 from str to int
-                caesar_key=int(caesar_key)
-                #checking if the key is correct based on caesar encryption method and showing different warnings based on the given key
-                if caesar_key < 0:
-                #change the stored data from the text
-                    message.text="Key can't be negative."
-                elif caesar_key == 0:
-                    #change the stored data from the text
-                    message.text="Key can't be zero\n Otherwise the text is going to remain the same"
-                elif caesar_key > 0 and caesar_key <= 25:
-                    if unencrypted_ceasar == "":
-                        #change the stored data from the text
-                        message.text="No text given please insert a text"
-                    else:
-                        #encrypting data
-                        encrypted=_encrypt_caesar(unencrypted_ceasar, caesar_key)
-                        #using specific format to show to the user the encrypted message
-                        #change the stored data from the text
-                        message.text=position(text=encrypted)
-                else:
-                    message.text="Key can't be greater than 25."
-        def decode_caesar_with_given_key(instance):
-            #storing the memory address
-            text=self.textinput_ceasar
-            #then we convert the data that it has storde to text, string format
-            text=text.text
-            #storing the memory address
-            message=self.label_ceasar
-            #storing the memory address
-            caesar_key=self.textinput_ceasar_key
-            #then we convert the data that it has storde to text, string format
-            caesar_key=caesar_key.text
-            if caesar_key == "":
-                message.text="no key given"
-            else:
-                #converting the key1 from str to int
-                caesar_key=int(caesar_key)
-                #checking if the key is correct based on caesar encryption method and showing different warnings based on the given key
-                if caesar_key < 0:
-                #change the stored data from the text
-                    message.text="Key can't be negative."
-                elif caesar_key == 0:
-                    #change the stored data from the text
-                    message.text="Key can't be zero\n Otherwise the text is going to remain the same"
-                elif caesar_key > 0 and caesar_key <= 25:
-                    if text == "":
-                        #change the stored data from the text
-                        message.text="No text given please insert a text"
-                    else:
-                        #encrypting data
-                        decode=_decrypt_caesar(text,caesar_key)
-                        #using specific format to show to the user the encrypted message
-                        #change the stored data from the text
-                        message.text=position(text=decode)
-                else:
-                    #change the stored data from the text
-                    message.text="Key can't be greater than 25." 
-        def show_frequency_caesar(instance):
-            y=show_frequency_analysis_in_text(text=self.textinput_ceasar)
-        #buttons
-        self.encode_ceasar_button=Button(
-            text="encode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,750),
-            on_release=encode_caesar
-        )
-        self.decode_ceasar_button=Button(
-            text="decode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,700),
-            on_release=decode_caesar_with_given_key
-        )
-        self.show_frequency_analysis_in_unencrypted_text_ceasar_button=Button(
-            text="frequency analysis",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1500,650),
-            on_release=show_frequency_caesar
-        )
-        def go_back(instance):
-            self.manager.current="main"
-        self.button_back_from_caesar=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-
-        #adding the widgets
-        layout.add_widget(self.label_ceasar)
-        layout.add_widget(self.textinput_ceasar)
-        layout.add_widget(label)
-        layout.add_widget(self.textinput_ceasar_key)
-        layout.add_widget(self.encode_ceasar_button)
-        layout.add_widget(self.decode_ceasar_button)
-        layout.add_widget(self.show_frequency_analysis_in_unencrypted_text_ceasar_button)
-        layout.add_widget(self.button_back_from_caesar)
-
-        #adding the layout too
-        self.add_widget(layout)
-
-class Affine(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.label_Affine=Label(
-            text="affine results and warnings!",
-            size_hint=(.5,.1),
-            pos=(0,600)
-        )
-        self.label_affine_key1=Label(
-            text="Give the 2 keys. they must be greater than 0 of course.",
-            size_hint=(.6,.1),
-            pos=(400,600)
-        )
-        self.label_affine_key_1=Label(
-            text="key 1",
-            size_hint=(.4,.1),
-            pos=(500,650)
-        )
-        self.label_affine_key_2=Label(
-            text="Key 2",
-            size_hint=(.4,.1),
-            pos=(750,650)
-        )
-        #textinputs
-        self.textinput_affine=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        self.textinput_affine_key1=TextInput(
-            size_hint=(.1,.05),
-            pos=(800,750),
-            multiline=False
-        )
-        self.textinput_affine_key2=TextInput(
-            size_hint=(.1,.05),
-            pos=(1025,750),
-            multiline=False
-        )
-        #functionality for the buttons
-        def encode_affine(instance):
-            global fail
-            #storing the memory address
-            unencrypted_affine=self.textinput_affine
-            #then we convert the data that it has storde to text, string format
-            unencrypted_affine=unencrypted_affine.text
-            #storing the memory address
-            key1=self.textinput_affine_key1
-            #then we convert the data that it has storde to text, string format
-            key1=key1.text
-            #storing the memory address
-            key2=self.textinput_affine_key2
-            #then we convert the data that it has storde to text, string format
-            key2=key2.text
-            check_keys=0
-            #storing the memory address
-            label=self.label_Affine
-            if key1 == "":
-                check_keys=1
-            if key2 == "":
-                check_keys =1
-            if key1== "" and key2 == "":
-                label.text="No keys given"
-                check_keys=2
-            if check_keys ==1:
-                label.text="one of the keys is missing"
-            if check_keys==0:
-                #converting the key1 from str to int
-                key1=int(key1)
-                #converting the key2 from str to int
-                key2=int(key2)
-                #checking if the keys are correct based on affine encryption method and showing different messages to the user based on the keys given
-                if key1 < 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Both keys can't be negative."
-                elif key1 < 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't be negative and key 2 zero"
-                elif key1 < 0 and key2 > 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't be negative."
-                elif key1 == 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Key 2 can't be negative and key 1 zero"
-                elif key1 == 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="Both keys can't be zero."
-                elif key1 == 0 and key2 > 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't zero"
-                    #change the stored data from the text
-                elif key1 > 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Key 2 can't be negative"
-                elif key1 > 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="key can't be zero"
-                else:
-                    encrypted=affine_cipher(text=unencrypted_affine, a=key1, b=key2, mode='encrypt')
-                    #showing the data in a specific format
-                    label.text=position(encrypted)
-        def affine_decode(instance):
-            global fail
-            #storing the memory address
-            label=self.label_Affine
-            #storing the memory address
-            text=self.textinput_affine
-            #then we convert the data that it has storde to text, string format
-            text=text.text
-            #storing the memory address
-            key1=self.textinput_affine_key1
-            #then we convert the data that it has storde to text, string format
-            key1=key1.text
-            #storing the memory address
-            key2=self.textinput_affine_key2
-            check_keys=0
-            if key1 == "":
-                check_keys=1
-            if key2 == "":
-                check_keys =1
-            if key1== "" and key2 == "":
-                label.text="No keys given"
-                check_keys=2
-            if check_keys ==1:
-                label.text="one of the keys is missing"
-            if check_keys ==0:
-                #then we convert the data that it has storde to text, string format
-                key2=key2.text
-                #converting the key from str to int
-                key2=int(key2)
-                #converting the key from str to int
-                key1=int(key1)
-                #checking if the keys are correct based on affine encryption method and showing different messages to the user based on the keys given
-                if key1 < 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Both keys can't be negative."
-                elif key1 < 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't be negative and key 2 zero"
-                elif key1 < 0 and key2 > 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't be negative."
-                elif key1 == 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Key 2 can't be negative and key 1 zero"
-                elif key1 == 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="Both keys can't be zero."
-                elif key1 == 0 and key2 > 0:
-                    #change the stored data from the text
-                    label.text="Key 1 can't zero"
-                elif key1 > 0 and key2 < 0:
-                    #change the stored data from the text
-                    label.text="Key 2 can't be negative"
-                elif key1 > 0 and key2 == 0:
-                    #change the stored data from the text
-                    label.text="key can't be zero"
-                else:
-                    encrypted=affine_cipher(text=text, a=key1, b=key2, mode='decrypt')
-                    if fail == False:                   
-                        #showing the data in a specific format
-                        label.text=position(encrypted)
-                    else:
-                        label.text="base is not invertible for the given modulus"
-        def show_frequency_affine(instance):
-            y=show_frequency_analysis_in_text(text=self.textinput_affine)
-        def go_back(instance):
-            self.manager.current="main"
-        #buttons
-        self.encode_affine_button=Button(
-            text="encode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1225,750),
-            on_release=encode_affine
-        )
-        self.decode_affine_button=Button(
-            text="decode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1425,750),
-            on_release=affine_decode
-        )
-        self.show_frequency_analysis_in_unencrypted_text_affine_button=Button(
-            text="frequency analysis",
-            font_size="20sp",
-            size_hint=(.125,.05),
-            pos=(1625,750),
-            on_release=show_frequency_affine
-        )
-        self.button_back_from_affine=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1625,700),
-            on_release=go_back
-        )
-
-        #adding the widgets
-        layout.add_widget(self.label_Affine)
-        layout.add_widget(self.textinput_affine)
-        layout.add_widget(self.label_affine_key1)
-        layout.add_widget(self.label_affine_key_1)
-        layout.add_widget(self.textinput_affine_key1)
-        layout.add_widget(self.label_affine_key_2)
-        layout.add_widget(self.textinput_affine_key2)
-        layout.add_widget(self.encode_affine_button)
-        layout.add_widget(self.decode_affine_button)
-        layout.add_widget(self.show_frequency_analysis_in_unencrypted_text_affine_button)
-        layout.add_widget(self.button_back_from_affine)
-
-        #adding layout too
-        self.add_widget(layout)
-
-#function that makes the key to have the same size with the text eg hello key=to returns totot
-def extend_key(unencrypted, key):
-    key = list(key)
-    if len(unencrypted) == len(key):
-        return key
+def position(text) -> str:
+    """Format text to display with line breaks"""
+    if not text:
+        return ""
+    copy = ""
+    start = 0
+    end = 120
+    number = len(text)
+    n = 0
+    
+    if number <= 120:
+        return text
+    elif number > 120 and number % 120 != 0:
+        while n < number // 120:
+            for i in range(start, end):
+                copy += text[i]
+            copy += "\n"
+            start += 120
+            end += 120
+            n += 1
+        for i in range(start, len(text)):
+            copy += text[i]
     else:
-        for i in range(len(unencrypted) - len(key)):
-            key.append(key[i % len(key)])
-    return "".join(key)
-#def to encrypt with given key based on vigener cipher board
-def encrypt_vigenere(unencrypted, key):
-    encrypted_text = []
-    key = extend_key(unencrypted, key)
-    for i in range(len(unencrypted)):
-        char = unencrypted[i]
-        if char.isupper():
-            #converting the char to a number in the ascii board and then based to the vigener we then convert the new valuw to a char
-            encrypted_char = chr((ord(char) + ord(key[i]) - 2 * ord('A')) % 26 + ord('A'))
-        elif char.islower():
-            #converting the char to a number in the ascii board and then based to the vigener we then convert the new valuw to a char
-            encrypted_char = chr((ord(char) + ord(key[i]) - 2 * ord('a')) % 26 + ord('a'))
-        else:
-            encrypted_char = char
-        encrypted_text.append(encrypted_char)
-    return "".join(encrypted_text)
-#def to decrypt with given key based on vigener cipher
-def decrypt_vigenere(encrypted, key):
-    decrypted_text = []
-    key = extend_key(encrypted, key)
-    for i in range(len(encrypted)):
-        char = encrypted[i]
-        if char.isupper():
-            #converting the char to a number in the ascii board and then based to the vigener we then convert the new valuw to a char
-            decrypted_char = chr((ord(char) - ord(key[i]) + 26) % 26 + ord('A'))
-        elif char.islower():
-            #converting the char to a number in the ascii board and then based to the vigener we then convert the new valuw to a char
-            decrypted_char = chr((ord(char) - ord(key[i]) + 26) % 26 + ord('a'))
-        else:
-            decrypted_char = char
-        decrypted_text.append(decrypted_char)
-    return "".join(decrypted_text)
-#defining the class that will contain the functions about the calcuation of the vigener encryption,decryption,frequency analysis and to save to a file the data
-class Vigener(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-        
-        #labels
-        self.label_vigener=Label(
-            text="vigener cypher warnings and results",
-            size_hint=(.1,.05),
-            pos=(300,600)
-        )
-        self.label_vigener_key=Label(
-            text="Give the key word.",
-            size_hint=(.1,.05),
-            pos=(1000,700)
-        )
-        #textinputs
-        self.textinput_vigener=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        self.textinput_vigener_key=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(800,750),
-            multiline=False
-        )
-        #functionality of the buttons
-        def encode_vigener(instance):
-            #storing the memory address
-            unencrypted=self.textinput_vigener
-            #then we convert the data that it has storde to text, string format
-            unencrypted=unencrypted.text
-            #storing the memory address
-            key=self.textinput_vigener_key
-            key=key.text
-            #storing the memory address
-            label=self.label_vigener
-            if key == "":
-                label.text="No key given"
-            else:
-                encrypt=encrypt_vigenere(unencrypted=unencrypted,key=key)
-                #formating the data
-                show=position(encrypt)
-                #change the stored value from the text
-                label.text=show
-        def decode_vigener(instance):
-            #storing the memory address
-            unencrypted=self.textinput_vigener
-            #then we convert the data that it has storde to text, string format
-            unencrypted=unencrypted.text
-            #storing the memory address
-            key=self.textinput_vigener_key
-            #then we convert the data that it has storde to text, string format
-            key=key.text
-            #storing the memory address
-            label=self.label_vigener
-            if key == "":
-                #then we convert the data that it has storde to text, string format and put new data
-                label.text="no key given"
-            else:
-                encrypt=decrypt_vigenere(encrypted=unencrypted,key=key)
-                #formating data
-                show=position(encrypt)
-                #change the stored data from the text
-                label.text=show
-        def show_frequency_vigener(instance):
-            y=show_frequency_analysis_in_text(text=self.textinput_vigener)
-        def go_back(instance):
-            self.manager.current="main"
-        #buttons
-        self.encode_vigener_button=Button(
-            text="encode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1000,650),
-            on_release=encode_vigener
-        )
-        self.decode_vigener_button=Button(
-            text="decode data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1200,650),
-            on_release=decode_vigener
-        )
-        self.show_frequency_analysis_in_unencrypted_text_vigener_button=Button(
-            text="frequency analysis",
-            font_size="20sp",
-            size_hint=(.125,.05),
-            pos=(1400,650),
-            on_release=show_frequency_vigener
-        )
-        self.button_back_from_vigener=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.125,.05),
-            pos=(1400,600),
-            on_release=go_back
-        )
-        #adding the widgets
-        layout.add_widget(self.label_vigener)
-        layout.add_widget(self.textinput_vigener)
-        layout.add_widget(self.label_vigener_key)
-        layout.add_widget(self.textinput_vigener_key)
-        layout.add_widget(self.encode_vigener_button)
-        layout.add_widget(self.decode_vigener_button)
-        layout.add_widget(self.show_frequency_analysis_in_unencrypted_text_vigener_button)
-        layout.add_widget(self.button_back_from_vigener)
-        #adding the layout
-        self.add_widget(layout)
-#check system to decrypt if the user wants
-#class for md5
-class md5(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.label_md5=Label(
-            text="md5 results",
-            size_hint=(.2,.05),
-            pos=(200,600)
-        )
-        #textinputs
-        self.textinput_md5=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality of the buttons
-        def md5_hashing(instance):
-            #storing the memory address
-            user_data=self.textinput_md5 
-            #retrive data from the memory
-            user_data=user_data.text
-            #hash what the user is giving
-            hashed=hashlib.md5(user_data.encode())
-            #converting the data after hash in a text format
-            hashed=hashed.hexdigest()
-            #storing the memory address
-            label=self.label_md5
-            #formating data
-            show=position(hashed)
-            #then we convert the data that it has storde to text, string format and put new data
-            label.text=show
-        def compare_file(instance):
-            #original hash
-            original_hash=self.textinput_md5 
-            #retrive data from the memory
-            label=self.label_md5
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"md5")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        #compare a hash with a string from a file
-        def compare_file_string(instance):
-            #original hash
-            original_hash=self.textinput_md5 
-            #retrive data from the memory
-            label=self.label_md5
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"md5")
-            if allow != False:
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"md5")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file(instance):
-            data=read_data("file1","r")
-            #storing the memory address
-            label=self.label_md5
-            label.text=hash_data_from_file(data,"md5")
-        def compare_files(instance):
-            #get paths of file_name1 and file_name2 in string format
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.label_md5
-            label.text=comapre_files_functionality(data1,data2,"md5")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_to_md5_input(instance):
-            data=self.textinput_md5.text
-            self.label_md5.text=hash_input_to_file(data,"md5")
-        #buttons
-        self.hash_md5_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=md5_hashing
-        )
-        self.hash_md5_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file
-        )
-        self.hash_md5_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string
-        )
-        self.hash_md5_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file
-        )
-        self.hash_md5_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files
-        )
-        self.button_back_from_md5=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.hash_md5_input=Button(
-            text="hash input and store it to a file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_to_md5_input
-        )
-        #adding widgets
-        layout.add_widget(self.label_md5)
-        layout.add_widget(self.textinput_md5)
-        layout.add_widget(self.hash_md5_button)
-        layout.add_widget(self.hash_md5_file_compare_button)
-        layout.add_widget(self.hash_md5_file_compare_unhashed_button)
-        layout.add_widget(self.hash_md5_file_hash_button)
-        layout.add_widget(self.hash_md5_files_compare_button)
-        layout.add_widget(self.button_back_from_md5)
-        layout.add_widget(self.hash_md5_input)
-        #adding layout too
-        self.add_widget(layout)
-class sha512(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.label_sha512=Label(
-            text="sha512 results",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.textinput_sha512=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality of the buttons
-        def sha512_hashing(instance):
-            #string address
-            label=self.label_sha512 
-            data=self.textinput_sha512
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha512(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha512(instance):
-            #original hash
-            original_hash=self.textinput_sha512
-            #retrive data from the memory
-            label=self.label_sha512
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha512")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        #compare a hash with a string from a file
-        def compare_file_string_sha512(instance):
-            #original hash
-            original_hash=self.textinput_sha512.text
-            #retrive data from the memory
-            label=self.label_sha512
-            allow=check_hash_size_given(original_hash,"sha512")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"512")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha512(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.label_sha512
-            label.text=hash_data_from_file(data,"sha512")
-        def compare_files_sha512(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.label_sha512
-            label.text=comapre_files_functionality(data1,data2,"sha512")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.textinput_sha512.text
-            label=self.label_sha512
-            label.text=hash_input_to_file(data,"sha512")
-        #buttons
-        self.hash_sha512_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha512_hashing
-        )
-        self.hash_sha512_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha512
-        )
-        self.hash_sha512_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha512
-        )
-        self.hash_sha512_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha512
-        )
-        self.hash_sha512_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha512
-        )
-        self.button_back_from_sha512=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha512_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-        #adding widgets
-        layout.add_widget(self.label_sha512)
-        layout.add_widget(self.textinput_sha512)
-        layout.add_widget(self.hash_sha512_button)
-        layout.add_widget(self.hash_sha512_file_compare_button)
-        layout.add_widget(self.hash_sha512_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha512_file_hash_button)
-        layout.add_widget(self.hash_sha512_files_compare_button)
-        layout.add_widget(self.button_back_from_sha512)
-        layout.add_widget(self.button_sha512_hash_input)
-        #adding layout too
-        self.add_widget(layout)
-
-class sha256(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.sha256_label=Label(
-            text="sha256 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.sha256_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def sha256_hashing(instance):
-            #string address
-            label=self.sha256_label
-            data=self.sha256_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha256(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha256(instance):
-            #original hash
-            original_hash=self.sha256_textinput.text
-            #retrive data from the memory
-            label=self.sha256_label
-            allow=check_hash_size_given(original_hash,"sha256")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_sha256(instance):
-            #original hash
-            original_hash=self.sha256_textinput
-            #retrive data from the memory
-            label=self.sha256_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha256")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,"256")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha256(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.sha256_label
-            label.text=hash_data_from_file(data,"sha256")
-        def compare_files_sha256(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.sha256_label
-            label.text=comapre_files_functionality(data1,data2,"sha256")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.sha256_textinput.text
-            label=self.sha256_label
-            label.text=hash_input_to_file(data,"sha256")
-        #buttons
-        self.hash_sha256_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha256_hashing
-        )
-        self.hash_sha256_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha256
-        )
-        self.hash_sha256_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha256
-        )
-        self.hash_sha256_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha256
-        )
-        self.hash_sha256_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha256
-        )
-        self.button_back_from_sha256=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha256_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.sha256_label)
-        layout.add_widget(self.sha256_textinput)
-        layout.add_widget(self.hash_sha256_button)
-        layout.add_widget(self.hash_sha256_file_compare_button)
-        layout.add_widget(self.hash_sha256_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha256_file_hash_button)
-        layout.add_widget(self.hash_sha256_files_compare_button)
-        layout.add_widget(self.button_back_from_sha256)
-        layout.add_widget(self.button_sha256_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class sha384(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-        #labels
-        self.sha384_label=Label(
-            text="sha384 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.sha384_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def sha384_hashing(instance):
-            #string address
-            label=self.sha384_label
-            data=self.sha384_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha384(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha384(instance):
-            #original hash
-            original_hash=self.sha384_textinput.text
-            #retrive data from the memory
-            label=self.sha384_label
-            allow=check_hash_size_given(original_hash,"sha384")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_sha384(instance):
-            #original hash
-            original_hash=self.sha384_textinput
-            #retrive data from the memory
-            label=self.sha384_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha384")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"384")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha384(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.sha384_label
-            label.text=hash_data_from_file(data,"sha384")
-        def compare_files_sha384(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.sha384_label
-            label.text=comapre_files_functionality(data1,data2,"sha384")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.sha384_textinput.text
-            label=self.sha384_label
-            label.text=hash_input_to_file(data,"sha384")
-        #buttons
-        self.hash_sha384_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha384_hashing
-        )
-        self.hash_sha384_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha384
-        )
-        self.hash_sha384_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha384
-        )
-        self.hash_sha384_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha384
-        )
-        self.hash_sha384_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha384
-        )
-        self.button_back_from_sha384=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha384_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.sha384_label)
-        layout.add_widget(self.sha384_textinput)
-        layout.add_widget(self.hash_sha384_button)
-        layout.add_widget(self.hash_sha384_file_compare_button)
-        layout.add_widget(self.hash_sha384_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha384_file_hash_button)
-        layout.add_widget(self.hash_sha384_files_compare_button)
-        layout.add_widget(self.button_back_from_sha384)
-        layout.add_widget(self.button_sha384_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class sha3_512(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.sha3_512_label=Label(
-            text="sha3_512 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.sha3_512_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def sha3_512_hashing(instance):
-            #string address
-            label=self.sha3_512_label
-            data=self.sha3_512_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha3_512(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha3_512(instance):
-            #original hash
-            original_hash=self.sha3_512_textinput.text
-            #retrive data from the memory
-            label=self.sha3_512_label
-            allow=check_hash_size_given(original_hash,"sha3_512")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_sha3_512(instance):
-            #original hash
-            original_hash=self.sha3_512_textinput
-            #retrive data from the memory
-            label=self.sha3_512_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha3_512")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"3_512")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha3_512(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.sha3_512_label
-            label.text=hash_data_from_file(data,"sha3_512")
-        def compare_files_sha3_512(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.sha3_512_label
-            label.text=comapre_files_functionality(data1,data2,"sha3_512")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.sha3_512_textinput.text
-            label=self.sha3_512_label
-            label.text=hash_input_to_file(data,"sha3_512")
-        #buttons
-        self.hash_sha3_512_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha3_512_hashing
-        )
-        self.hash_sha3_512_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha3_512
-        )
-        self.hash_sha3_512_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha3_512
-        )
-        self.hash_sha3_512_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha3_512
-        )
-        self.hash_sha3_512_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha3_512
-        )
-        self.button_back_from_sha3_512=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha3_512_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.sha3_512_label)
-        layout.add_widget(self.sha3_512_textinput)
-        layout.add_widget(self.hash_sha3_512_button)
-        layout.add_widget(self.hash_sha3_512_file_compare_button)
-        layout.add_widget(self.hash_sha3_512_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha3_512_file_hash_button)
-        layout.add_widget(self.hash_sha3_512_files_compare_button)
-        layout.add_widget(self.button_back_from_sha3_512)
-        layout.add_widget(self.button_sha3_512_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class sha3_256(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        layout=FloatLayout()
-
-        #labels
-        self.sha3_256_label=Label(
-            text="sha3_256 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.sha3_256_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def sha3_256_hashing(instance):
-            #string address
-            label=self.sha3_256_label
-            data=self.sha3_256_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha3_256(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha3_256(instance):
-            #original hash
-            original_hash=self.sha3_256_textinput.text
-            #retrive data from the memory
-            label=self.sha3_256_label
-            allow=check_hash_size_given(original_hash,"sha3_256")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_sha3_256(instance):
-            #original hash
-            original_hash=self.sha3_256_textinput
-            #retrive data from the memory
-            label=self.sha3_256_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha3_256")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"3_256")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha3_256(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.sha3_256_label
-            label.text=hash_data_from_file(data,"sha3_256")
-        def compare_files_sha3_256(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.sha3_256_label
-            label.text=comapre_files_functionality(data1,data2,"sha3_256")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.sha3_256_textinput.text
-            label=self.sha3_256_label
-            label.text=hash_input_to_file(data,"sha3_256")
-        #buttons
-        self.hash_sha3_256_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha3_256_hashing
-        )
-        self.hash_sha3_256_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha3_256
-        )
-        self.hash_sha3_256_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha3_256
-        )
-        self.hash_sha3_256_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha3_256
-        )
-        self.hash_sha3_256_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha3_256
-        )
-        self.button_back_from_sha3_256=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha3_256_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.sha3_256_label)
-        layout.add_widget(self.sha3_256_textinput)
-        layout.add_widget(self.hash_sha3_256_button)
-        layout.add_widget(self.hash_sha3_256_file_compare_button)
-        layout.add_widget(self.hash_sha3_256_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha3_256_file_hash_button)
-        layout.add_widget(self.hash_sha3_256_files_compare_button)
-        layout.add_widget(self.button_back_from_sha3_256)
-        layout.add_widget(self.button_sha3_256_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class BLAKE2b(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        layout=FloatLayout()
-
-        #labels
-        self.blake2b_label=Label(
-            text="blake2b output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.blake2b_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def blake2b_hashing(instance):
-            #string address
-            label=self.blake2b_label
-            data=self.blake2b_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.blake2b(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_blake2b(instance):
-            #original hash
-            original_hash=self.blake2b_textinput.text
-            #retrive data from the memory
-            label=self.blake2b_label
-            allow=check_hash_size_given(original_hash,"blake2b")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_blake2b(instance):
-            #original hash
-            original_hash=self.blake2b_textinput
-            #retrive data from the memory
-            label=self.blake2b_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"blake2b")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"BLAKE2b")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_blake2b(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.blake2b_label
-            label.text=hash_data_from_file(data,"BLAKE2b")
-        def compare_files_blake2b(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.blake2b_label
-            label.text=comapre_files_functionality(data1,data2,"BLAKE2b")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.blake2b_textinput.text
-            label=self.blake2b_label
-            label.text=hash_input_to_file(data,"BLAKE2b")
-        #buttons
-        self.hash_blake2b_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=blake2b_hashing
-        )
-        self.hash_blake2b_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_blake2b
-        )
-        self.hash_blake2b_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_blake2b
-        )
-        self.hash_blake2b_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_blake2b
-        )
-        self.hash_blake2b_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_blake2b
-        )
-        self.button_back_from_blake2b=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_blake2b_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.blake2b_label)
-        layout.add_widget(self.blake2b_textinput)
-        layout.add_widget(self.hash_blake2b_button)
-        layout.add_widget(self.hash_blake2b_file_compare_button)
-        layout.add_widget(self.hash_blake2b_file_compare_unhashed_button)
-        layout.add_widget(self.hash_blake2b_file_hash_button)
-        layout.add_widget(self.hash_blake2b_files_compare_button)
-        layout.add_widget(self.button_back_from_blake2b)
-        layout.add_widget(self.button_blake2b_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class BLAKE2s(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        layout=FloatLayout()
-
-        #labels
-        self.blake2s_label=Label(
-            text="blake2s output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.blake2s_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def blake2s_hashing(instance):
-            #string address
-            label=self.blake2s_label
-            data=self.blake2s_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.blake2s(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_blake2s(instance):
-            #original hash
-            original_hash=self.blake2s_textinput.text
-            #retrive data from the memory
-            label=self.blake2s_label
-            allow=check_hash_size_given(original_hash,"blake2s")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_blake2s(instance):
-            #original hash
-            original_hash=self.blake2s_textinput
-            #retrive data from the memory
-            label=self.blake2s_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"blake2s")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"BLAKE2s")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_blake2s(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.blake2s_label
-            label.text=hash_data_from_file(data,"BLAKE2s")
-        def compare_files_blake2s(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.blake2s_label
-            label.text=comapre_files_functionality(data1,data2,"BLAKE2s")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.blake2s_textinput.text
-            label=self.blake2s_label
-            label.text=hash_input_to_file(data,"BLAKE2s")
-        #buttons
-        self.hash_blake2s_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=blake2s_hashing
-        )
-        self.hash_blake2s_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_blake2s
-        )
-        self.hash_blake2s_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_blake2s
-        )
-        self.hash_blake2s_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_blake2s
-        )
-        self.hash_blake2s_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_blake2s
-        )
-        self.button_back_from_blake2s=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_blake2s_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.blake2s_label)
-        layout.add_widget(self.blake2s_textinput)
-        layout.add_widget(self.hash_blake2s_button)
-        layout.add_widget(self.hash_blake2s_file_compare_button)
-        layout.add_widget(self.hash_blake2s_file_compare_unhashed_button)
-        layout.add_widget(self.hash_blake2s_file_hash_button)
-        layout.add_widget(self.hash_blake2s_files_compare_button)
-        layout.add_widget(self.button_back_from_blake2s)
-        layout.add_widget(self.button_blake2s_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-class RIPEMD_160(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        layout=FloatLayout()
-
-        #labels
-        self.ripemd_160_label=Label(
-            text="ripemd160 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.ripemd_160_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def ripemd_160_hashing(instance):
-            #string address
-            label=self.ripemd_160_label
-            data=self.ripemd_160_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            h=RIPEMD160.new()
-            h.update(data)
-            hashed=h.hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_ripemd_160(instance):
-            #original hash
-            original_hash=self.ripemd_160_textinput.text
-            #retrive data from the memory
-            label=self.ripemd_160_label
-            allow=check_hash_size_given(original_hash,"ripemd160")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_ripemd_160(instance):
-            #original hash
-            original_hash=self.ripemd_160_textinput
-            #retrive data from the memory
-            label=self.ripemd_160_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"ripemd160")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"RIPEMD-160")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_ripemd_160(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.ripemd_160_label
-            label.text=hash_data_from_file(data,"RIPEMD-160")
-        def compare_files_ripemd_160(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.ripemd_160_label
-            label.text=comapre_files_functionality(data1,data2,"RIPEMD-160")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.ripemd_160_textinput.text
-            label=self.ripemd_160_label
-            label.text=hash_input_to_file(data,"RIPEMD-160")
-        #buttons
-        self.hash_ripemd_160_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=ripemd_160_hashing
-        )
-        self.hash_ripemd_160_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_ripemd_160
-        )
-        self.hash_ripemd_160_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_ripemd_160
-        )
-        self.hash_ripemd_160_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_ripemd_160
-        )
-        self.hash_ripemd_160_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_ripemd_160
-        )
-        self.button_back_from_ripemd_160=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_ripemd_160_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.ripemd_160_label)
-        layout.add_widget(self.ripemd_160_textinput)
-        layout.add_widget(self.hash_ripemd_160_button)
-        layout.add_widget(self.hash_ripemd_160_file_compare_button)
-        layout.add_widget(self.hash_ripemd_160_file_compare_unhashed_button)
-        layout.add_widget(self.hash_ripemd_160_file_hash_button)
-        layout.add_widget(self.hash_ripemd_160_files_compare_button)
-        layout.add_widget(self.button_back_from_ripemd_160)
-        layout.add_widget(self.button_ripemd_160_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-
-class WHirlpool(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        layout=FloatLayout()
-
-        #labels
-        self.Whirlpool_label=Label(
-            text="Whirlpool output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.Whirlpool_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def Whirlpool_hashing(instance):
-            #string address
-            label=self.Whirlpool_label
-            data=self.Whirlpool_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            h=whirlpool.new()
-            h.update(data)
-            hashed=h.hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_Whirlpool(instance):
-            #original hash
-            original_hash=self.Whirlpool_textinput.text
-            #retrive data from the memory
-            label=self.Whirlpool_label
-            allow=check_hash_size_given(original_hash,"whirpool")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_Whirlpool(instance):
-            #original hash
-            original_hash=self.Whirlpool_textinput
-            #retrive data from the memory
-            label=self.Whirlpool_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"whirpool")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"Whirlpool")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_Whirlpool(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.Whirlpool_label
-            label.text=hash_data_from_file(data,"Whirlpool")
-        def compare_files_Whirlpool(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.Whirlpool_label
-            label.text=comapre_files_functionality(data1,data2,"Whirlpool")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.Whirlpool_textinput.text
-            label=self.Whirlpool_label
-            label.text=hash_input_to_file(data,"Whirlpool")
-        #buttons
-        self.hash_Whirlpool_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=Whirlpool_hashing
-        )
-        self.hash_Whirlpool_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_Whirlpool
-        )
-        self.hash_Whirlpool_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_Whirlpool
-        )
-        self.hash_Whirlpool_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_Whirlpool
-        )
-        self.hash_Whirlpool_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_Whirlpool
-        )
-        self.button_back_from_Whirlpool=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_Whirlpool_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.Whirlpool_label)
-        layout.add_widget(self.Whirlpool_textinput)
-        layout.add_widget(self.hash_Whirlpool_button)
-        layout.add_widget(self.hash_Whirlpool_file_compare_button)
-        layout.add_widget(self.hash_Whirlpool_file_compare_unhashed_button)
-        layout.add_widget(self.hash_Whirlpool_file_hash_button)
-        layout.add_widget(self.hash_Whirlpool_files_compare_button)
-        layout.add_widget(self.button_back_from_Whirlpool)
-        layout.add_widget(self.button_Whirlpool_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-
-class sha_1(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        layout=FloatLayout()
-
-        #labels
-        self.sha_1_label=Label(
-            text="sha1 output",
-            size_hint=(.4,.05),
-            pos=(300,600)
-        )
-        #textinputs
-        self.sha_1_textinput=TextInput(
-            font_size="20sp",
-            size_hint=(.4,.05),
-            pos=(0,750),
-            multiline=False
-        )
-        #functionality
-        def sha_1_hashing(instance):
-            #string address
-            label=self.sha_1_label
-            data=self.sha_1_textinput
-            #formating data from adress to text
-            data=data.text
-            #removing \n in the end
-            data=data.strip()
-            #encode data
-            data=data.encode()
-            hashed=hashlib.sha1(data).hexdigest()
-            #show the hash to the user by updating the text in label
-            label.text=position(hashed)
-        def compare_file_sha_1(instance):
-            #original hash
-            original_hash=self.sha_1_textinput.text
-            #retrive data from the memory
-            label=self.sha_1_label
-            allow=check_hash_size_given(original_hash,"sha1")
-            if allow != False:
-                data=read_data("file1","rb")
-                label.text=compare(data=data,hashreturned=original_hash)
-            else:
-                label.text="input hash does not have the right size"
-        def compare_file_string_sha_1(instance):
-            #original hash
-            original_hash=self.sha_1_textinput
-            #retrive data from the memory
-            label=self.sha_1_label
-            original_hash=original_hash.text
-            allow=check_hash_size_given(original_hash,"sha1")
-            if allow != False:
-                # File to check
-                data=read_data("file1","r")
-                label.text=compare_file_string_(data,original_hash,"sha_1")
-            else:
-                label.text="input hash does not have the right size"
-        def hash_file_sha_1(instance):
-            data=read_data("file1","r")
-            #retrive data from the memory
-            label=self.sha_1_label
-            label.text=hash_data_from_file(data,"sha_1")
-        def compare_files_sha_1(instance):
-            data1=read_data("file1","r")
-            data2=read_data("file2","r")
-            label=self.sha_1_label
-            label.text=comapre_files_functionality(data1,data2,"sha_1")
-        def go_back(instance):
-            self.manager.current="main"
-        def hash_input_store_to_file(instance):
-            data=self.sha_1_textinput.text
-            label=self.sha_1_label
-            label.text=hash_input_to_file(data,"sha_1")
-        #buttons
-        self.hash_sha_1_button=Button(
-            text="hash data",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1300,650),
-            on_release=sha_1_hashing
-        )
-        self.hash_sha_1_file_compare_button=Button(
-            text="compare hash with hashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(1000,650),
-            on_release=compare_file_sha_1
-        )
-        self.hash_sha_1_file_compare_unhashed_button=Button(
-            text="compare hash with unhashed file",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(700,650),
-            on_release=compare_file_string_sha_1
-        )
-        self.hash_sha_1_file_hash_button=Button(
-            text="hash from file and store in new",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(300,650),
-            on_release=hash_file_sha_1
-        )
-        self.hash_sha_1_files_compare_button=Button(
-            text="compare files with hashes",
-            font_size="20sp",
-            size_hint=(.15,.05),
-            pos=(0,650),
-            on_release=compare_files_sha_1
-        )
-        self.button_back_from_sha_1=Button(
-            text="back",
-            font_size="20sp",
-            size_hint=(.1,.05),
-            pos=(1500,600),
-            on_release=go_back
-        )
-        self.button_sha_1_hash_input=Button(
-            text="hash input and store to file",
-            font_size="20sp",
-            size_hint=(.2,.05),
-            pos=(1500,650),
-            on_release=hash_input_store_to_file
-        )
-
-        #adding widgets
-        layout.add_widget(self.sha_1_label)
-        layout.add_widget(self.sha_1_textinput)
-        layout.add_widget(self.hash_sha_1_button)
-        layout.add_widget(self.hash_sha_1_file_compare_button)
-        layout.add_widget(self.hash_sha_1_file_compare_unhashed_button)
-        layout.add_widget(self.hash_sha_1_file_hash_button)
-        layout.add_widget(self.hash_sha_1_files_compare_button)
-        layout.add_widget(self.button_back_from_sha_1)
-        layout.add_widget(self.button_sha_1_hash_input)
-
-        #adding layout too
-        self.add_widget(layout)
-#-----------------------------------------------------#
-#              Main Functionality
-
-#creating a def in order to format the text in the screen
-def position(text) -> str: #it returns a string
-    copy=""
-    start=0
-    end=120
-    number=len(text)
-    n=0
-    if number==120:
-        while n <= number//120:
-            n+=1
-            for i in range(start,end):
-                copy+=text[i]
-            copy+="\n"
-            start+=120
-            end+=120
-    elif number <120:
-        for i in range(0,len(text)):
-            copy+=text[i]
-    elif number>120 and number%120!=0:
-        while n < number//120:
-            n+=1
-            for i in range(start,end):
-                copy+=text[i]
-            copy+="\n"
-            start+=120
-            end+=120
-        end=n*120
-        for i in range (end,len(text)):
-            copy+=text[i]
-    elif number>120 and number%120==0:
-        while n <= number//120:
-            n+=1
-            for i in range(start,end):
-                copy+=text[i]
-            copy+="\n"
-            start+=120
-            end+=120
+        while n <= number // 120:
+            for i in range(start, end):
+                copy += text[i]
+            copy += "\n"
+            start += 120
+            end += 120
+            n += 1
     return copy
+
 def show_frequency_analysis_in_text(text):
-    text=text.text
-    #convert the data that it has storde to text, string format
+    """Show frequency analysis plot"""
     counter = Counter(text)
-    data_words = counter.keys()
-    words_counts = counter.values()
+    data_words = list(counter.keys())
+    words_counts = list(counter.values())
     indexes = np.arange(len(data_words))
     width = 0.7
     plt.bar(indexes, words_counts, width)
     plt.xticks(indexes + width * 0.5, data_words)
     plt.show()
-def _encrypt_caesar(text,key):
+
+def read_data(filenumber, mode):
+    """Read data from file"""
+    data = []
+    path = askopenfilename(title=filenumber)
+    if not path:
+        return "No file selected"
+    try:
+        with open(path, mode=mode, encoding='utf-8' if 'r' in mode else None) as file:
+            for x in file:
+                clean = x.strip()
+                data.append(clean)
+        return data
+    except Exception as e:
+        return f"Error reading file: {str(e)}"
+
+def check_hash_size_given(data1, algorithm):
+    """Validate hash size"""
+    if not data1:
+        return False
+    sizes = {
+        "sha512": 128, "sha256": 64, "sha384": 96, "sha3_512": 128,
+        "sha3_256": 64, "sha1": 40, "blake2b": 128, "blake2s": 64,
+        "ripemd160": 40, "whirlpool": 128, "md5": 32
+    }
+    return len(data1) == sizes.get(algorithm, 0)
+
+# ==================== ENCRYPTION FUNCTIONS ====================
+
+def _encrypt_caesar(text, key):
+    """Encrypt text using Caesar cipher"""
     result = ""
     for char in text:
-        # Encrypt uppercase characters
-        if (char.isupper()):
-            result += chr((ord(char) + key-65) % 26 + 65)
-        # Encrypt lowercase characters
-        else:
+        if char.isupper():
+            result += chr((ord(char) + key - 65) % 26 + 65)
+        elif char.islower():
             result += chr((ord(char) + key - 97) % 26 + 97)
+        else:
+            result += char
     return result
-#function to decrypt caesar cipher with given key
-def _decrypt_caesar(text,key):
+
+def _decrypt_caesar(text, key):
+    """Decrypt text using Caesar cipher"""
     result = ""
     for char in text:
-        # Encrypt uppercase characters
-        if (char.isupper()):
-            #chr makes an integer into a letter based on ascii board and ord makes a letter into an integer based on the same board
-            result += chr((ord(char) - key-65) % 26 + 65)
-        # Encrypt lowercase characters
-        else:
-            #chr makes an integer into a letter based on ascii board and ord makes a letter into an integer based on the same board
+        if char.isupper():
+            result += chr((ord(char) - key - 65) % 26 + 65)
+        elif char.islower():
             result += chr((ord(char) - key - 97) % 26 + 97)
+        else:
+            result += char
     return result
-#affine cypher encryption and decryption
-fail=False
+
 def affine_cipher(text, a, b, mode):
-    global fail
-    fail=False
+    """Encrypt/decrypt using Affine cipher"""
     result = ''
-    m = 26  # size of the alphabet
+    m = 26
+    fail = False
+    
     for char in text:
         if char.isalpha():
-            #ord makes a character into an number from ascii board
             x = ord(char) - ord('A' if char.isupper() else 'a')
             if mode == 'encrypt':
-                #we encrypt based on the formula c=(k1*plain_text + key2) mod 26
                 new_x = (a * x + b) % m
             elif mode == 'decrypt':
-                # Find the modular multiplicative inverse of a
                 try:
                     a_inv = pow(a, -1, m)
-                except ValueError:
-                    fail=True
-                    break
-                if fail == False:
-                    a_inv = pow(a, -1, m)
-                    #we decrypt based on the formula p=(1/a)*(c-key2) mod 26
                     new_x = a_inv * (x - b) % m
-                    #chr converts a number from ascii board into a letter
-            if fail == False:
+                except ValueError:
+                    fail = True
+                    break
+            if not fail:
                 new_char = chr(new_x + ord('A' if char.isupper() else 'a'))
+            else:
+                new_char = char
         else:
             new_char = char
         result += new_char
-    return result
-def read_data(filenumber,mode):
-    data=[]
-    clean=""
-    find=True
-    path=askopenfilename(title=filenumber)
+    
+    return result, fail
+
+def extend_key(unencrypted, key):
+    """Extend Vigenere key to match text length"""
+    key = list(key)
+    if len(unencrypted) == len(key):
+        return "".join(key)
+    for i in range(len(unencrypted) - len(key)):
+        key.append(key[i % len(key)])
+    return "".join(key)
+
+def encrypt_vigenere(unencrypted, key):
+    """Encrypt using Vigenere cipher"""
+    encrypted_text = []
+    key = extend_key(unencrypted, key)
+    for i in range(len(unencrypted)):
+        char = unencrypted[i]
+        if char.isupper():
+            encrypted_char = chr((ord(char) + ord(key[i]) - 2 * ord('A')) % 26 + ord('A'))
+        elif char.islower():
+            encrypted_char = chr((ord(char) + ord(key[i]) - 2 * ord('a')) % 26 + ord('a'))
+        else:
+            encrypted_char = char
+        encrypted_text.append(encrypted_char)
+    return "".join(encrypted_text)
+
+def decrypt_vigenere(encrypted, key):
+    """Decrypt using Vigenere cipher"""
+    decrypted_text = []
+    key = extend_key(encrypted, key)
+    for i in range(len(encrypted)):
+        char = encrypted[i]
+        if char.isupper():
+            decrypted_char = chr((ord(char) - ord(key[i]) + 26) % 26 + ord('A'))
+        elif char.islower():
+            decrypted_char = chr((ord(char) - ord(key[i]) + 26) % 26 + ord('a'))
+        else:
+            decrypted_char = char
+        decrypted_text.append(decrypted_char)
+    return "".join(decrypted_text)
+
+# ==================== HASH OPERATIONS ====================
+
+def compare(data, hashreturned):
+    """Compare hash with file data"""
+    if isinstance(data, list) and data:
+        if data[0] == hashreturned:
+            return "Verification succeeded."
+        else:
+            return "Verification failed."
+    return "No file given or file empty"
+
+def compare_file_string_(data, original_hash, hash_algo):
+    """Compare hash with string from file"""
+    if not original_hash:
+        return "No hash was given through input"
+    
+    if not isinstance(data, list) or not data:
+        return "No file given or file empty"
+    
+    hash_functions = {
+        "md5": lambda d: hashlib.md5(d.encode()).hexdigest(),
+        "sha512": lambda d: hashlib.sha512(d.encode()).hexdigest(),
+        "sha256": lambda d: hashlib.sha256(d.encode()).hexdigest(),
+        "sha384": lambda d: hashlib.sha384(d.encode()).hexdigest(),
+        "sha3_512": lambda d: hashlib.sha3_512(d.encode()).hexdigest(),
+        "sha3_256": lambda d: hashlib.sha3_256(d.encode()).hexdigest(),
+        "blake2b": lambda d: hashlib.blake2b(d.encode()).hexdigest(),
+        "blake2s": lambda d: hashlib.blake2s(d.encode()).hexdigest(),
+        "ripemd160": lambda d: RIPEMD160.new(d.encode()).hexdigest(),
+        "whirlpool": lambda d: whirlpool.new(d.encode()).hexdigest(),
+        "sha1": lambda d: hashlib.sha1(d.encode()).hexdigest()
+    }
+    
+    func = hash_functions.get(hash_algo.lower())
+    if not func:
+        return f"Algorithm {hash_algo} not supported"
+    
+    hash_returned = func(data[0])
+    if original_hash == hash_returned:
+        return "Verification succeeded."
+    else:
+        return "Verification failed."
+
+def hash_data_from_file(data, algorithm):
+    """Hash file content and save to new file"""
+    if not isinstance(data, list):
+        return "No file given"
+    
+    hash_functions = {
+        "md5": lambda d: hashlib.md5(d.encode()).hexdigest(),
+        "sha512": lambda d: hashlib.sha512(d.encode()).hexdigest(),
+        "sha256": lambda d: hashlib.sha256(d.encode()).hexdigest(),
+        "sha384": lambda d: hashlib.sha384(d.encode()).hexdigest(),
+        "sha3_512": lambda d: hashlib.sha3_512(d.encode()).hexdigest(),
+        "sha3_256": lambda d: hashlib.sha3_256(d.encode()).hexdigest(),
+        "blake2b": lambda d: hashlib.blake2b(d.encode()).hexdigest(),
+        "blake2s": lambda d: hashlib.blake2s(d.encode()).hexdigest(),
+        "ripemd160": lambda d: RIPEMD160.new(d.encode()).hexdigest(),
+        "whirlpool": lambda d: whirlpool.new(d.encode()).hexdigest(),
+        "sha1": lambda d: hashlib.sha1(d.encode()).hexdigest()
+    }
+    
+    func = hash_functions.get(algorithm.lower())
+    if not func:
+        return f"Algorithm {algorithm} not supported"
+    
+    hash_returned = ""
+    for x in data:
+        hash_returned += func(x) + "\n"
+    
+    store_path = askdirectory()
+    if not store_path:
+        return "No directory selected"
+    
+    store_path += f"/{algorithm}_results.txt"
     try:
-        file=open(path,mode=mode)
-    except TypeError or FileNotFoundError:
-        find=False
-    if find == True:
-        for x in file:
-            clean=x.strip()
-            data.append(clean)
-        return data
+        with open(store_path, "w") as store:
+            store.write(hash_returned)
+        return "Hash stored successfully"
+    except Exception as e:
+        return f"Error saving file: {str(e)}"
+
+def hash_input_to_file(data, algorithm):
+    """Hash input and save to file"""
+    if not data:
+        return "No data to hash"
+    
+    hash_functions = {
+        "md5": lambda d: hashlib.md5(d.encode()).hexdigest(),
+        "sha512": lambda d: hashlib.sha512(d.encode()).hexdigest(),
+        "sha256": lambda d: hashlib.sha256(d.encode()).hexdigest(),
+        "sha384": lambda d: hashlib.sha384(d.encode()).hexdigest(),
+        "sha3_512": lambda d: hashlib.sha3_512(d.encode()).hexdigest(),
+        "sha3_256": lambda d: hashlib.sha3_256(d.encode()).hexdigest(),
+        "blake2b": lambda d: hashlib.blake2b(d.encode()).hexdigest(),
+        "blake2s": lambda d: hashlib.blake2s(d.encode()).hexdigest(),
+        "ripemd160": lambda d: RIPEMD160.new(d.encode()).hexdigest(),
+        "whirlpool": lambda d: whirlpool.new(d.encode()).hexdigest(),
+        "sha1": lambda d: hashlib.sha1(d.encode()).hexdigest()
+    }
+    
+    func = hash_functions.get(algorithm.lower())
+    if not func:
+        return f"Algorithm {algorithm} not supported"
+    
+    hashed = func(data)
+    
+    path = askdirectory()
+    if not path:
+        return "No directory selected"
+    
+    filename = f"/{algorithm}_results.txt"
+    try:
+        with open(path + filename, "w") as file:
+            file.write(hashed + "\n")
+        return "Hash stored successfully"
+    except Exception as e:
+        return f"Error saving file: {str(e)}"
+
+def compare_files_functionality(data1, data2, algorithm):
+    """Compare two files using hashes"""
+    if not isinstance(data1, list) or not isinstance(data2, list):
+        return "One or both files not found"
+    
+    hash_functions = {
+        "md5": lambda d: hashlib.md5(d.encode()).hexdigest(),
+        "sha512": lambda d: hashlib.sha512(d.encode()).hexdigest(),
+        "sha256": lambda d: hashlib.sha256(d.encode()).hexdigest(),
+        "sha384": lambda d: hashlib.sha384(d.encode()).hexdigest(),
+        "sha3_512": lambda d: hashlib.sha3_512(d.encode()).hexdigest(),
+        "sha3_256": lambda d: hashlib.sha3_256(d.encode()).hexdigest(),
+        "blake2b": lambda d: hashlib.blake2b(d.encode()).hexdigest(),
+        "blake2s": lambda d: hashlib.blake2s(d.encode()).hexdigest(),
+        "ripemd160": lambda d: RIPEMD160.new(d.encode()).hexdigest(),
+        "whirlpool": lambda d: whirlpool.new(d.encode()).hexdigest(),
+        "sha1": lambda d: hashlib.sha1(d.encode()).hexdigest()
+    }
+    
+    func = hash_functions.get(algorithm.lower())
+    if not func:
+        return f"Algorithm {algorithm} not supported"
+    
+    hash1 = [func(x) for x in data1]
+    hash2 = [func(x) for x in data2]
+    
+    l1, l2 = len(hash1), len(hash2)
+    if l1 != l2:
+        return "Files have different number of lines"
+    
+    success = sum(1 for i in range(l1) if hash1[i] == hash2[i])
+    if success == l1:
+        return "All hashes match - files are identical"
     else:
-        return "could not find file"
-def compare(data,hashreturned) -> str:
-    hash_=[]
-    hash_.append(str(hashreturned))
-    if type(data) == list:
-        if data[0].decode() == hash_[0]:
-            return "verification succeed."
-        else:
-            return "verification failed."
-    else:
-        return "No file given"
-def compare_file_string_(data,original_hash,hash_algo):
-    if original_hash == "":
-        return"No hash was given through input"
-    hash_returned=[]
-    hash_=[]
-    hash_.append(original_hash)
-    if type(data) == list:
-        if hash_algo == "512":
-            hash_returned.append(hashlib.sha512(data[0].encode()).hexdigest())
-        elif hash_algo == "256":
-            hash_returned.append(hashlib.sha256(data[0].encode()).hexdigest())
-        elif hash_algo == "384":
-            hash_returned.append(hashlib.sha384(data[0].encode()).hexdigest())
-        elif hash_algo == "3-512":
-            hash_returned.append(hashlib.sha3_512(data[0].encode()).hexdigest())
-        elif hash_algo == "3-256":
-            hash_returned.append(hashlib.sha3_256(data[0].encode()).hexdigest())
-        elif hash_algo == "md5":
-            hash_returned.append(hashlib.md5(data[0].encode()).hexdigest())
-        elif hash_algo == "BLAKE2b":
-            hash_returned.append(hashlib.blake2b(data[0].encode()).hexdigest())
-        elif hash_algo == "BLAKE2s":
-            hash_returned.append(hashlib.blake2s(data[0].encode()).hexdigest())
-        elif hash_algo == "RIPEMD-160":
-            h=RIPEMD160.new()
-            h.update(data[0].encode())
-            hash_returned.append(h.hexdigest())
-        elif hash_algo == "Whirlpool":
-            h=whirlpool.new(data[0].encode())
-            hash_returned.append(h.hexdigest())
-        elif hash_algo == "sha_1":
-            hash_returned.append(hashlib.sha1(data[0].encode()).hexdigest())
-        if hash_[0] == hash_returned[0]:
-            return"verification succeed."
-        else:
-            return "verification failed."
-    else:
-        return "No file given"
-def hash_data_from_file(data,algorithm):
-    hash_returned=""
-    if type(data) == list:
-        if algorithm == "md5":
-                for x in data:
-                    hash_returned+= hashlib.md5(x.encode()).hexdigest()+"\n"
-        elif algorithm == "sha512":
-            for x in data:
-                    hash_returned+= hashlib.sha512(x.encode()).hexdigest()+"\n"
-        elif algorithm == "sha256":
-            for x in data:
-                    hash_returned+= hashlib.sha256(x.encode()).hexdigest()+"\n"
-        elif algorithm == "sha384":
-            for x in data:
-                    hash_returned+= hashlib.sha384(x.encode()).hexdigest()+"\n"
-        elif algorithm == "sha3-512":
-            for x in data:
-                    hash_returned+= hashlib.sha3_512(x.encode()).hexdigest()+"\n"
-        elif algorithm == "sha3-256":
-            for x in data:
-                    hash_returned+= hashlib.sha3_256(x.encode()).hexdigest()+"\n"
-        elif algorithm == "BLAKE2b":
-            for x in data:
-                    hash_returned+= hashlib.blake2b(x.encode()).hexdigest()+"\n"
-        elif algorithm == "BLAKE2s":
-            for x in data:
-                    hash_returned+= hashlib.blake2s(x.encode()).hexdigest()+"\n"
-        elif algorithm == "RIPEMD-160":
-            h=RIPEMD160.new()
-            for x in data:
-                h.update(x.encode())
-                hash_returned+=h.hexdigest()+"\n"
-        elif algorithm == "Whirlpool":
-            h=whirlpool.new()
-            for x in data:
-                h.update(x.encode())
-                hash_returned+=h.hexdigest()+"\n"
-        elif algorithm == "sha_1":
-            for x in data:
-                    hash_returned+= hashlib.sha1(x.encode()).hexdigest()+"\n"
-        #new file path
-        store_to_a_new_file=askdirectory()
-        store_to_a_new_file+="/{}_results.txt".format(algorithm)
-        if store_to_a_new_file == "/{}_results.txt".format(algorithm):
-            return "no directory/folder given"
-        else:
-            #we open the file and store it to a variable named store
-            with open(store_to_a_new_file,"w") as store:
-                #we store the hashes
-                data_stored=store.write(hash_returned)
-            #we close the file
-            store.close()
-            return "hash stored succeeded"
-    else:
-        return "no file given"
-def comapre_files_functionality(data1,data2,algorithm):
-    hash1_returned1=[]
-    hash2_returned2=[]
-    if type(data1) == list and type(data2) == list:
-        if algorithm == "md5":
-            for x in data1:
-                hash1_returned1.append(hashlib.md5(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.md5(y.encode()).hexdigest()+"\n")
-        elif algorithm == "sha512":
-            for x in data1:
-                hash1_returned1.append(hashlib.sha512(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha512(y.encode()).hexdigest()+"\n")
-        elif algorithm == "sha256":
-            for x in data1:
-                hash1_returned1.append(hashlib.sha256(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha256(y.encode()).hexdigest()+"\n")
-        elif algorithm == "sha384":
-            for x in data1:
-                hash1_returned1.append(hashlib.sha384(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha384(y.encode()).hexdigest()+"\n")
-        elif algorithm == "sha3_512":
-            for x in data1:
-                hash1_returned1.append(hashlib.sha3_512(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha3_512(y.encode()).hexdigest()+"\n")
-        elif algorithm == "sha3_256":
-            for x in data1:
-                hash1_returned1.append(hashlib.sha3_256(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha3_256(y.encode()).hexdigest()+"\n")
-        elif algorithm == "BLAKE2b":
-            for x in data1:
-                hash1_returned1.append(hashlib.blake2b(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.blake2b(y.encode()).hexdigest()+"\n")
-        elif algorithm == "BLAKE2s":
-            for x in data1:
-                hash1_returned1.append(hashlib.blake2s(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.blake2s(y.encode()).hexdigest()+"\n")
-        elif algorithm == "RIPEMD-160":
-            for x in data1:
-                h=RIPEMD160.new()
-                h.update(x.encode())
-                hash1_returned1.append(h.hexdigest()+"\n")
-            for y in data2:
-                h=RIPEMD160.new()
-                h.update(y.encode())
-                hash2_returned2.append(h.hexdigest()+"\n")
-        elif algorithm == "Whirlpool":
-            for x in data1:
-                h=whirlpool.new()
-                h.update(x.encode())
-                hash1_returned1.append(h.hexdigest()+"\n")
-            for y in data2:
-                h=whirlpool.new()
-                h.update(y.encode())
-                hash2_returned2.append(h.hexdigest()+"\n")
-        elif algorithm == "sha_1":
-            for x in data1:
-                hash2_returned2.append(hashlib.sha1(x.encode()).hexdigest()+"\n")
-            for y in data2:
-                hash2_returned2.append(hashlib.sha1(y.encode()).hexdigest()+"\n")
-        #we check if both boards which have hashes have the same lenghth,if so they have the same number of data
-        l1=len(hash1_returned1)
-        l2=len(hash2_returned2)
-        #is used to count the successful hashes,those that are equal
-        success=0
-        #we check if we have the same amount of hashes
-        if l1==l2:
-            #we check for successful hashes and if their number is equal with the length of the board this means all hashes are successful
-            for i in range(l1):
-                if hash1_returned1[i]==hash2_returned2[i]:
-                    success+=1
-            if success == l1:
-                return "all hashes are the same,so success"
-            else:
-                return "some hashes are different,so it failed"
-        else:
-            return "one file contains more hashes than the other"
-    else:
-        return "one or both files not found"
-def hash_input_to_file(data,algorithm):
-    path=askdirectory()
-    filename="/{}_results.txt".format(algorithm)
-    file=open(path+filename,"w")
-    if algorithm == "md5":
-        file.write(hashlib.md5(data.encode()).hexdigest()+"\n")
-    elif algorithm == "sha512":
-        file.write(hashlib.sha512(data.encode()).hexdigest()+"\n")
-    elif algorithm == "sha256":
-        file.write(hashlib.sha256(data.encode()).hexdigest()+"\n")
-    elif algorithm == "sha384":
-        file.write(hashlib.sha384(data.encode()).hexdigest()+"\n")
-    elif algorithm == "sha3_512":
-        file.write(hashlib.sha3_512(data.encode()).hexdigest()+"\n")
-    elif algorithm == "sha3_256":
-        file.write(hashlib.sha3_256(data.encode()).hexdigest()+"\n")
-    elif algorithm == "BLAKE2b":
-        file.write(hashlib.blake2b(data.encode()).hexdigest()+"\n")
-    elif algorithm == "BLAKE2s":
-        file.write(hashlib.blake2s(data.encode()).hexdigest()+"\n")
-    elif algorithm == "RIPEMD-160":
-        h=RIPEMD160.new()
-        h.update(data.encode())
-        file.write(h.hexdigest())
-    elif algorithm == "Whirlpool":
-        h=whirlpool.new(data.encode())
-        file.write(h.hexdigest())
-    elif algorithm == "sha_1":
-        file.write(hashlib.sha1(data.encode()).hexdigest())
-    file.close()
-    return "hash stored successfully"
-def check_hash_size_given(data1,algorithm):
-    if data1 is not None:
-        if algorithm == "sha512":
-            return len(data1) == 128
-        elif algorithm == "sha256":
-            return len(data1) == 64
-        elif algorithm == "sha384":
-            return len(data1) == 96
-        elif algorithm == "sha3_512":
-            return len(data1) == 128
-        elif algorithm == "sha3_256":
-            return len(data1) == 64
-        elif algorithm == "sha1":
-            return len(data1) == 40
-        elif algorithm == "blake2b":
-            return len(data1) == 128
-        elif algorithm == "blake2s":
-            return len(data1) == 64
-        elif algorithm == "ripemd160":
-            return len(data1) == 40
-        elif algorithm == "whirlpool":
-            return len(data1) == 128
-        elif algorithm == "md5":
-            return len(data1) == 32
-        else:
-            return False
-    else:
-        return False
-#end of main functionality
-#<------------------------------------>
-#Screen Manager
-class MyScreenManager(ScreenManager):
+        return f"{success}/{l1} hashes match - files differ"
+
+# ==================== MASTER DICTIONARIES ====================
+
+HASH_FUNCTIONS = {
+    "md5": lambda data: hashlib.md5(data).hexdigest(),
+    "sha1": lambda data: hashlib.sha1(data).hexdigest(),
+    "sha256": lambda data: hashlib.sha256(data).hexdigest(),
+    "sha384": lambda data: hashlib.sha384(data).hexdigest(),
+    "sha512": lambda data: hashlib.sha512(data).hexdigest(),
+    "sha3_256": lambda data: hashlib.sha3_256(data).hexdigest(),
+    "sha3_512": lambda data: hashlib.sha3_512(data).hexdigest(),
+    "blake2b": lambda data: hashlib.blake2b(data).hexdigest(),
+    "blake2s": lambda data: hashlib.blake2s(data).hexdigest(),
+    "ripemd160": lambda data: RIPEMD160.new(data).hexdigest(),
+    "whirlpool": lambda data: whirlpool.new(data).hexdigest()
+}
+
+ENCRYPTION_ALGORITHMS = ["caesar", "affine", "vigenere"]
+HASH_ALGORITHMS = list(HASH_FUNCTIONS.keys())
+
+# ==================== SCREEN CLASSES ====================
+
+class HashScreen(Screen):
+    def __init__(self, algorithm, **kwargs):
+        super().__init__(**kwargs)
+        self.algorithm = algorithm
+        self.name = algorithm
+        
+        layout = FloatLayout()
+
+        # Title label
+        title_label = Label(
+            text=f"{algorithm.upper()} Hashing",
+            size_hint=(.4, .05),
+            pos=(300, 700),
+            font_size='24sp'
+        )
+
+        # Results label
+        self.result_label = Label(
+            text="Results will appear here...",
+            size_hint=(.8, .3),
+            pos=(100, 350),
+            text_size=(800, None)
+        )
+
+        # Input field
+        self.textinput = TextInput(
+            hint_text=f"Enter text to hash with {algorithm}",
+            font_size="20sp",
+            size_hint=(.6, .05),
+            pos=(200, 600),
+            multiline=False
+        )
+
+        # Buttons layout
+        buttons_layout = GridLayout(
+            cols=2,
+            spacing=10,
+            size_hint=(.4, .2),
+            pos=(200, 150)
+        )
+
+        # Hash button
+        hash_button = Button(
+            text=f"Hash Text",
+            font_size="16sp",
+            on_release=self.hash_input
+        )
+
+        # File operations buttons
+        hash_file_btn = Button(
+            text="Hash File",
+            font_size="16sp",
+            on_release=self.hash_file
+        )
+
+        compare_hash_btn = Button(
+            text="Compare with File Hash",
+            font_size="16sp",
+            on_release=self.compare_with_file_hash
+        )
+
+        compare_string_btn = Button(
+            text="Compare with File Text",
+            font_size="16sp",
+            on_release=self.compare_with_file_text
+        )
+
+        compare_files_btn = Button(
+            text="Compare Two Files",
+            font_size="16sp",
+            on_release=self.compare_files
+        )
+
+        save_hash_btn = Button(
+            text="Save Hash to File",
+            font_size="16sp",
+            on_release=self.save_hash_to_file
+        )
+
+        buttons_layout.add_widget(hash_button)
+        buttons_layout.add_widget(hash_file_btn)
+        buttons_layout.add_widget(compare_hash_btn)
+        buttons_layout.add_widget(compare_string_btn)
+        buttons_layout.add_widget(compare_files_btn)
+        buttons_layout.add_widget(save_hash_btn)
+
+        # Back button
+        back_button = Button(
+            text="Back",
+            font_size="20sp",
+            size_hint=(.15, .05),
+            pos=(50, 50),
+            on_release=self.go_back
+        )
+
+        # Add all widgets
+        layout.add_widget(title_label)
+        layout.add_widget(self.result_label)
+        layout.add_widget(self.textinput)
+        layout.add_widget(buttons_layout)
+        layout.add_widget(back_button)
+        self.add_widget(layout)
+
+    def hash_input(self, instance):
+        data = self.textinput.text.strip()
+        if not data:
+            self.result_label.text = "Please enter some text to hash"
+            return
+        
+        data_bytes = data.encode()
+        func = HASH_FUNCTIONS.get(self.algorithm)
+        if not func:
+            self.result_label.text = f"Algorithm {self.algorithm} not implemented"
+            return
+        
+        try:
+            hashed = func(data_bytes)
+            self.result_label.text = f"Hash result:\n{hashed}"
+        except Exception as e:
+            self.result_label.text = f"Error: {str(e)}"
+
+    def hash_file(self, instance):
+        data = read_data("file1", "r")
+        result = hash_data_from_file(data, self.algorithm)
+        self.result_label.text = result
+
+    def compare_with_file_hash(self, instance):
+        original_hash = self.textinput.text.strip()
+        if not original_hash:
+            self.result_label.text = "Please enter a hash to compare"
+            return
+        
+        if not check_hash_size_given(original_hash, self.algorithm):
+            self.result_label.text = "Input hash does not have the right size"
+            return
+        
+        data = read_data("file1", "rb")
+        result = compare(data, original_hash)
+        self.result_label.text = result
+
+    def compare_with_file_text(self, instance):
+        original_hash = self.textinput.text.strip()
+        if not original_hash:
+            self.result_label.text = "Please enter a hash to compare"
+            return
+        
+        if not check_hash_size_given(original_hash, self.algorithm):
+            self.result_label.text = "Input hash does not have the right size"
+            return
+        
+        data = read_data("file1", "r")
+        result = compare_file_string_(data, original_hash, self.algorithm)
+        self.result_label.text = result
+
+    def compare_files(self, instance):
+        data1 = read_data("file1", "r")
+        data2 = read_data("file2", "r")
+        result = compare_files_functionality(data1, data2, self.algorithm)
+        self.result_label.text = result
+
+    def save_hash_to_file(self, instance):
+        data = self.textinput.text.strip()
+        if not data:
+            self.result_label.text = "Please enter text to hash and save"
+            return
+        
+        result = hash_input_to_file(data, self.algorithm)
+        self.result_label.text = result
+
+    def go_back(self, instance):
+        self.manager.current = "main"
+
+class CaesarScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(transition=FadeTransition(), **kwargs)
-        self.add_widget(MainWindow(name="main"))
-        self.add_widget(Caesar(name="caesar"))
-        self.add_widget(Affine(name="affine"))
-        self.add_widget(Vigener(name="vigenere"))
-        self.add_widget(md5(name="md5"))
-        self.add_widget(sha512(name="sha512"))
-        self.add_widget(sha256(name="sha256"))
-        self.add_widget(sha384(name="sha384"))
-        self.add_widget(sha3_512(name="sha3_512"))
-        self.add_widget(sha3_256(name="sha3_256"))
-        self.add_widget(BLAKE2b(name="blake2b"))
-        self.add_widget(BLAKE2s(name="blake2s"))
-        self.add_widget(RIPEMD_160(name="ripemd160"))
-        self.add_widget(WHirlpool(name="WHIRPOOL"))
-        self.add_widget(sha_1(name="sha_1"))
-# --------- App ---------
-class EncryptionApp(App):
+        super().__init__(**kwargs)
+        self.name = "caesar"
+        
+        layout = FloatLayout()
+
+        # Title
+        title = Label(
+            text="Caesar Cipher",
+            size_hint=(.4, .05),
+            pos=(300, 700),
+            font_size='24sp'
+        )
+
+        # Results label
+        self.result_label = Label(
+            text="Results will appear here...",
+            size_hint=(.8, .2),
+            pos=(100, 400),
+            text_size=(800, None)
+        )
+
+        # Text input
+        self.text_input = TextInput(
+            hint_text="Enter text to encrypt/decrypt",
+            font_size="20sp",
+            size_hint=(.6, .05),
+            pos=(200, 600),
+            multiline=False
+        )
+
+        # Key input
+        self.key_input = TextInput(
+            hint_text="Enter key (1-25)",
+            font_size="20sp",
+            size_hint=(.2, .05),
+            pos=(200, 520),
+            multiline=False
+        )
+
+        # Buttons layout
+        buttons_layout = GridLayout(
+            cols=3,
+            spacing=10,
+            size_hint=(.6, .1),
+            pos=(200, 300)
+        )
+
+        encode_btn = Button(text="Encode", on_release=self.encode)
+        decode_btn = Button(text="Decode", on_release=self.decode)
+        freq_btn = Button(text="Frequency Analysis", on_release=self.frequency_analysis)
+        back_btn = Button(text="Back", on_release=self.go_back)
+
+        buttons_layout.add_widget(encode_btn)
+        buttons_layout.add_widget(decode_btn)
+        buttons_layout.add_widget(freq_btn)
+        buttons_layout.add_widget(back_btn)
+
+        layout.add_widget(title)
+        layout.add_widget(self.result_label)
+        layout.add_widget(self.text_input)
+        layout.add_widget(self.key_input)
+        layout.add_widget(buttons_layout)
+        self.add_widget(layout)
+
+    def encode(self, instance):
+        text = self.text_input.text.strip()
+        key_str = self.key_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key_str:
+            self.result_label.text = "Please enter key"
+            return
+        
+        try:
+            key = int(key_str)
+            if key <= 0 or key > 25:
+                self.result_label.text = "Key must be between 1 and 25"
+                return
+            
+            encrypted = _encrypt_caesar(text, key)
+            self.result_label.text = f"Encrypted:\n{position(encrypted)}"
+        except ValueError:
+            self.result_label.text = "Key must be a number"
+
+    def decode(self, instance):
+        text = self.text_input.text.strip()
+        key_str = self.key_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key_str:
+            self.result_label.text = "Please enter key"
+            return
+        
+        try:
+            key = int(key_str)
+            if key <= 0 or key > 25:
+                self.result_label.text = "Key must be between 1 and 25"
+                return
+            
+            decrypted = _decrypt_caesar(text, key)
+            self.result_label.text = f"Decrypted:\n{position(decrypted)}"
+        except ValueError:
+            self.result_label.text = "Key must be a number"
+
+    def frequency_analysis(self, instance):
+        text = self.text_input.text.strip()
+        if text:
+            show_frequency_analysis_in_text(text)
+        else:
+            self.result_label.text = "Please enter text first"
+
+    def go_back(self, instance):
+        self.manager.current = "main"
+
+class AffineScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "affine"
+        
+        layout = FloatLayout()
+
+        # Title
+        title = Label(
+            text="Affine Cipher",
+            size_hint=(.4, .05),
+            pos=(300, 700),
+            font_size='24sp'
+        )
+
+        # Results label
+        self.result_label = Label(
+            text="Results will appear here...",
+            size_hint=(.8, .2),
+            pos=(100, 400),
+            text_size=(800, None)
+        )
+
+        # Text input
+        self.text_input = TextInput(
+            hint_text="Enter text to encrypt/decrypt",
+            font_size="20sp",
+            size_hint=(.6, .05),
+            pos=(200, 600),
+            multiline=False
+        )
+
+        # Key inputs
+        self.key1_input = TextInput(
+            hint_text="Key 1",
+            font_size="20sp",
+            size_hint=(.2, .05),
+            pos=(200, 520),
+            multiline=False
+        )
+
+        self.key2_input = TextInput(
+            hint_text="Key 2", 
+            font_size="20sp",
+            size_hint=(.2, .05),
+            pos=(620, 520),
+            multiline=False
+        )
+
+        # Buttons layout
+        buttons_layout = GridLayout(
+            cols=3,
+            spacing=10,
+            size_hint=(.6, .1),
+            pos=(200, 300)
+        )
+
+        encode_btn = Button(text="Encode", on_release=self.encode)
+        decode_btn = Button(text="Decode", on_release=self.decode)
+        freq_btn = Button(text="Frequency Analysis", on_release=self.frequency_analysis)
+        back_btn = Button(text="Back", on_release=self.go_back)
+
+        buttons_layout.add_widget(encode_btn)
+        buttons_layout.add_widget(decode_btn)
+        buttons_layout.add_widget(freq_btn)
+        buttons_layout.add_widget(back_btn)
+
+        layout.add_widget(title)
+        layout.add_widget(self.result_label)
+        layout.add_widget(self.text_input)
+        layout.add_widget(self.key1_input)
+        layout.add_widget(self.key2_input)
+        layout.add_widget(buttons_layout)
+        self.add_widget(layout)
+
+    def encode(self, instance):
+        text = self.text_input.text.strip()
+        key1_str = self.key1_input.text.strip()
+        key2_str = self.key2_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key1_str or not key2_str:
+            self.result_label.text = "Please enter both keys"
+            return
+        
+        try:
+            key1, key2 = int(key1_str), int(key2_str)
+            encrypted, fail = affine_cipher(text, key1, key2, 'encrypt')
+            if fail:
+                self.result_label.text = "Encryption failed - check keys"
+            else:
+                self.result_label.text = f"Encrypted:\n{position(encrypted)}"
+        except ValueError:
+            self.result_label.text = "Keys must be numbers"
+
+    def decode(self, instance):
+        text = self.text_input.text.strip()
+        key1_str = self.key1_input.text.strip()
+        key2_str = self.key2_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key1_str or not key2_str:
+            self.result_label.text = "Please enter both keys"
+            return
+        
+        try:
+            key1, key2 = int(key1_str), int(key2_str)
+            decrypted, fail = affine_cipher(text, key1, key2, 'decrypt')
+            if fail:
+                self.result_label.text = "Decryption failed - key 1 must be coprime with 26"
+            else:
+                self.result_label.text = f"Decrypted:\n{position(decrypted)}"
+        except ValueError:
+            self.result_label.text = "Keys must be numbers"
+
+    def frequency_analysis(self, instance):
+        text = self.text_input.text.strip()
+        if text:
+            show_frequency_analysis_in_text(text)
+        else:
+            self.result_label.text = "Please enter text first"
+
+    def go_back(self, instance):
+        self.manager.current = "main"
+
+class VigenereScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "vigenere"
+        
+        layout = FloatLayout()
+
+        # Title
+        title = Label(
+            text="Vigenere Cipher",
+            size_hint=(.4, .05),
+            pos=(300, 700),
+            font_size='24sp'
+        )
+
+        # Results label
+        self.result_label = Label(
+            text="Results will appear here...",
+            size_hint=(.8, .2),
+            pos=(100, 400),
+            text_size=(800, None)
+        )
+
+        # Text input
+        self.text_input = TextInput(
+            hint_text="Enter text to encrypt/decrypt",
+            font_size="20sp",
+            size_hint=(.6, .05),
+            pos=(200, 600),
+            multiline=False
+        )
+
+        # Key input
+        self.key_input = TextInput(
+            hint_text="Enter key word",
+            font_size="20sp",
+            size_hint=(.6, .05),
+            pos=(200, 520),
+            multiline=False
+        )
+
+        # Buttons layout
+        buttons_layout = GridLayout(
+            cols=3,
+            spacing=10,
+            size_hint=(.6, .1),
+            pos=(200, 300)
+        )
+
+        encode_btn = Button(text="Encode", on_release=self.encode)
+        decode_btn = Button(text="Decode", on_release=self.decode)
+        freq_btn = Button(text="Frequency Analysis", on_release=self.frequency_analysis)
+        back_btn = Button(text="Back to Main", on_release=self.go_back)
+
+        buttons_layout.add_widget(encode_btn)
+        buttons_layout.add_widget(decode_btn)
+        buttons_layout.add_widget(freq_btn)
+        buttons_layout.add_widget(back_btn)
+
+        layout.add_widget(title)
+        layout.add_widget(self.result_label)
+        layout.add_widget(self.text_input)
+        layout.add_widget(self.key_input)
+        layout.add_widget(buttons_layout)
+        self.add_widget(layout)
+
+    def encode(self, instance):
+        text = self.text_input.text.strip()
+        key = self.key_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key:
+            self.result_label.text = "Please enter key"
+            return
+        
+        encrypted = encrypt_vigenere(text, key)
+        self.result_label.text = f"Encrypted:\n{position(encrypted)}"
+
+    def decode(self, instance):
+        text = self.text_input.text.strip()
+        key = self.key_input.text.strip()
+        
+        if not text:
+            self.result_label.text = "Please enter text"
+            return
+        if not key:
+            self.result_label.text = "Please enter key"
+            return
+        
+        decrypted = decrypt_vigenere(text, key)
+        self.result_label.text = f"Decrypted:\n{position(decrypted)}"
+
+    def frequency_analysis(self, instance):
+        text = self.text_input.text.strip()
+        if text:
+            show_frequency_analysis_in_text(text)
+        else:
+            self.result_label.text = "Please enter text first"
+
+    def go_back(self, instance):
+        self.manager.current = "main"
+
+# Main menu screen
+class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "main"
+        
+        # Single GridLayout for everything
+        layout = GridLayout(
+            cols=5,  # 5 columns for compact layout
+            spacing=3,
+            padding=10
+        )
+
+        # Title spanning all columns
+        title = Label(
+            text="Cryptography Toolbox",
+            font_size='20sp'
+        )
+        layout.add_widget(title)
+        
+        # Add empty cells to complete the row (title spans 5 columns)
+        for _ in range(4):
+            layout.add_widget(Label())
+
+        # Warning spanning all columns
+        warning = Label(
+            text="Weak ciphers warning!",
+            font_size='20sp',
+            color=(1, 0, 0, 1)
+        )
+        layout.add_widget(warning)
+        
+        # Add empty cells to complete the row
+        for _ in range(4):
+            layout.add_widget(Label())
+
+        # Section label - Encryption
+        encryption_label = Label(
+            text="Encryption:",
+            font_size='20sp',
+            color=(0, 0.5, 1, 1)
+        )
+        layout.add_widget(encryption_label)
+        
+        # Add empty cells
+        for _ in range(4):
+            layout.add_widget(Label())
+
+        # Add encryption buttons with fixed sizes
+        for algo in ENCRYPTION_ALGORITHMS:
+            btn = Button(
+                text=algo.upper(),
+                font_size="20sp",
+                size_hint_x=0.8,   # Control width (0.0-1.0)
+                size_hint_y=0.2,   # Control height
+                on_release=self.go_to_screen
+            )
+            layout.add_widget(btn)
+        
+        # Add 2 empty cells to complete the 5-column row
+        layout.add_widget(Label())
+        layout.add_widget(Label())
+
+        # Section label - Hashes
+        hash_label = Label(
+            text="Hash Algorithms:",
+            font_size='20sp',
+            color=(0, 0.5, 1, 1)
+        )
+        layout.add_widget(hash_label)
+        
+        # Add empty cells
+        for _ in range(4):
+            layout.add_widget(Label())
+
+        # Add all hash buttons with fixed sizes
+        for algo in HASH_ALGORITHMS:
+            btn = Button(
+                text=algo.upper(),
+                font_size="20sp",
+                size_hint_x=0.6,   # Control width
+                size_hint_y=0.4,  # Control height
+                on_release=self.go_to_screen
+            )
+            layout.add_widget(btn)
+
+        self.add_widget(layout)
+
+    def go_to_screen(self, instance):
+        screen_name = instance.text.lower()
+        self.manager.current = screen_name
+
+# Screen Manager
+class CryptoApp(App):
     def build(self):
         Window.maximize()
-        return MyScreenManager()
-    
+        sm = ScreenManager(transition=FadeTransition())
+        
+        # Add main screen first
+        sm.add_widget(MainScreen())
+        
+        # Add encryption screens
+        sm.add_widget(CaesarScreen())
+        sm.add_widget(AffineScreen())
+        sm.add_widget(VigenereScreen())
+        
+        # Add hash screens
+        for algorithm in HASH_ALGORITHMS:
+            sm.add_widget(HashScreen(algorithm))
+        
+        return sm
+
 if __name__ == "__main__":
-    EncryptionApp().run()
+    CryptoApp().run()
