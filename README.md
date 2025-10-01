@@ -8,7 +8,7 @@
 
 A comprehensive multi-algorithm encryption and hashing GUI application built with Python and Kivy, featuring classical ciphers and modern cryptographic hashes.
 
-## 🚀 Major Update: Code Optimized by 60%
+## Major Update: Code Optimized by 60%
 
 **Latest Version**: `encryption_app_update.py` features a complete codebase refactor with:
 - **60% code reduction** (from 2000+ to ~800 lines)
@@ -18,23 +18,23 @@ A comprehensive multi-algorithm encryption and hashing GUI application built wit
 
 ## Features
 
-### 🔐 Encryption Algorithms
+### Encryption Algorithms
 - **Caesar cipher** - Simple substitution cipher
 - **Affine cipher** - Linear substitution cipher  
 - **Vigenère cipher** - Polyalphabetic substitution cipher
 
-### 🔒 Cryptographic Hash Functions (11 Algorithms)
+### Cryptographic Hash Functions (11 Algorithms)
 - **MD5**, **SHA-1**, **SHA-256**, **SHA-384**, **SHA-512**
 - **SHA3-256**, **SHA3-512**, **BLAKE2b**, **BLAKE2s**
 - **RIPEMD-160**, **Whirlpool**
 
-### 📁 File Operations
+### File Operations
 - Hash file contents with any algorithm
 - Compare file hashes for integrity verification
 - Store hashes to new files
 - Compare two files using cryptographic hashes
 
-### 🔍 Analysis Tools
+### Analysis Tools
 - Frequency analysis visualization for encryption
 - Hash size validation
 - Real-time hash comparison
@@ -60,46 +60,29 @@ pip install -r requirements.txt
 # Run the optimized application
 python3 encryption_app_update.py
 ```
-Cryptographic Components
-Encryption Algorithms
-Algorithm	Key Requirements	Security Level	Features
-Caesar	Single integer (1-25)	⚠️ Low	Frequency analysis
-Affine	Two integers (a, b)	⚠️ Low	Modular arithmetic
-Vigenère	Text key (case-sensitive)	⚠️ Medium-Low	Polyalphabetic
-Hash Functions (11 Algorithms)
-Function	Output Size	Security	Speed	Status
-MD5	128-bit	❌ Broken	⚡ Fast	Legacy
-SHA-1	160-bit	❌ Weak	⚡ Fast	Legacy
-SHA-256	256-bit	✅ Strong	⚡ Fast	Secure
-SHA-384	384-bit	✅ Strong	⏳ Medium	Secure
-SHA-512	512-bit	✅ Strong	⏳ Slow	Secure
-SHA3-256	256-bit	✅ Strong	⚡ Fast	Modern
-SHA3-512	512-bit	✅ Strong	⏳ Medium	Modern
-BLAKE2b	512-bit	✅ Strong	⚡ Fast	Modern
-BLAKE2s	256-bit	✅ Strong	⚡ Fast	Modern
-RIPEMD-160	160-bit	✅ Strong	⚡ Fast	Legacy
-Whirlpool	512-bit	✅ Strong	⏳ Slow	Secure
-Alternative Compact Version:
-If you prefer a more compact view:
+## Encryption Algorithms
 
-Encryption Algorithms
-Algorithm	Key	Security	Features
-Caesar	Integer (1-25)	⚠️ Low	Frequency analysis
-Affine	Two integers	⚠️ Low	Modular math
-Vigenère	Text key	⚠️ Medium-Low	Polyalphabetic
-Hash Functions
-Algorithm	Size	Security	Speed
-MD5	128-bit	❌ Broken	⚡ Fast
-SHA-1	160-bit	❌ Weak	⚡ Fast
-SHA-256	256-bit	✅ Strong	⚡ Fast
-SHA-384	384-bit	✅ Strong	⏳ Medium
-SHA-512	512-bit	✅ Strong	⏳ Slow
-SHA3-256	256-bit	✅ Strong	⚡ Fast
-SHA3-512	512-bit	✅ Strong	⏳ Medium
-BLAKE2b	512-bit	✅ Strong	⚡ Fast
-BLAKE2s	256-bit	✅ Strong	⚡ Fast
-RIPEMD-160	160-bit	✅ Strong	⚡ Fast
-Whirlpool	512-bit	✅ Strong	⏳ Slow
+| Algorithm | Key Requirements | Security Level | Features |
+|-----------|------------------|----------------|----------|
+| **Caesar** | Single integer (1-25) | ⚠️ Low | Frequency analysis |
+| **Affine** | Two integers (a, b) | ⚠️ Low | Modular arithmetic |
+| **Vigenère** | Text key (case-sensitive) | ⚠️ Medium-Low | Polyalphabetic |
+
+## Hash Functions
+
+| Function | Output Size | Security | Speed | Status |
+|----------|-------------|----------|-------|--------|
+| **MD5** | 128-bit | ❌ Broken | ⚡ Fast | Legacy |
+| **SHA-1** | 160-bit | ❌ Weak | ⚡ Fast | Legacy |
+| **SHA-256** | 256-bit | ✅ Strong | ⚡ Fast | Secure |
+| **SHA-384** | 384-bit | ✅ Strong | ⏳ Medium | Secure |
+| **SHA-512** | 512-bit | ✅ Strong | ⏳ Slow | Secure |
+| **SHA3-256** | 256-bit | ✅ Strong | ⚡ Fast | Modern |
+| **SHA3-512** | 512-bit | ✅ Strong | ⏳ Medium | Modern |
+| **BLAKE2b** | 512-bit | ✅ Strong | ⚡ Fast | Modern |
+| **BLAKE2s** | 256-bit | ✅ Strong | ⚡ Fast | Modern |
+| **RIPEMD-160** | 160-bit | ✅ Strong | ⚡ Fast | Legacy |
+| **Whirlpool** | 512-bit | ✅ Strong | ⏳ Slow | Secure |
 
 graph TD
     A[Main Screen] --> B[Encryption Algorithms]
