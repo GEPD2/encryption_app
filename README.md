@@ -84,6 +84,7 @@ python3 encryption_app_update.py
 | **RIPEMD-160** | 160-bit | ✅ Strong | ⚡ Fast | Legacy |
 | **Whirlpool** | 512-bit | ✅ Strong | ⏳ Slow | Secure |
 
+```mermaid
 graph TD
     A[Main Screen] --> B[Encryption Algorithms]
     A --> C[Hash Algorithms]
@@ -103,6 +104,7 @@ graph TD
     C --> C9[BLAKE2s]
     C --> C10[RIPEMD-160]
     C --> C11[Whirlpool]
+```
 Master Class System
 Single HashScreen class handles all 11 hash algorithms
 
