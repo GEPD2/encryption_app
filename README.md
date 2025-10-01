@@ -11,7 +11,7 @@ A comprehensive multi-algorithm encryption and hashing GUI application built wit
 ## Major Update: Code Optimized by 60%
 
 **Latest Version**: `encryption_app_pure_python.py` features a complete codebase refactor with:
-- **60% code reduction** (from 2000+ to ~800 lines)
+- **60% code reduction** (from 2500+ to ~900 lines)
 - **Unified architecture** using master classes and dictionaries
 - **Enhanced maintainability** and scalability
 - **Consistent UI** across all algorithms
