@@ -763,22 +763,30 @@ class md5(Screen):
             #then we convert the data that it has storde to text, string format and put new data
             label.text=show
         def compare_file(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.textinput_md5 
             #retrive data from the memory
             label=self.label_md5
             original_hash=original_hash.text
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"md5")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         #compare a hash with a string from a file
         def compare_file_string(instance):
-            data=read_data("file1","r")
             #original hash
             original_hash=self.textinput_md5 
             #retrive data from the memory
             label=self.label_md5
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"md5")
+            allow=check_hash_size_given(original_hash,"md5")
+            if allow != False:
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"md5")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file(instance):
             data=read_data("file1","r")
             #storing the memory address
@@ -891,22 +899,30 @@ class sha512(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha512(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.textinput_sha512
             #retrive data from the memory
             label=self.label_sha512
             original_hash=original_hash.text
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha512")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         #compare a hash with a string from a file
         def compare_file_string_sha512(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
-            original_hash=self.textinput_sha512
+            original_hash=self.textinput_sha512.text
             #retrive data from the memory
             label=self.label_sha512
-            label.text=compare_file_string_(data,original_hash,"512")
+            allow=check_hash_size_given(original_hash,"sha512")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"512")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha512(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1020,21 +1036,29 @@ class sha256(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha256(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.sha256_textinput.text
             #retrive data from the memory
             label=self.sha256_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha256")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_sha256(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.sha256_textinput
             #retrive data from the memory
             label=self.sha256_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,"256")
+            allow=check_hash_size_given(original_hash,"sha256")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,"256")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha256(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1148,21 +1172,29 @@ class sha384(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha384(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.sha384_textinput.text
             #retrive data from the memory
             label=self.sha384_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha384")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_sha384(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.sha384_textinput
             #retrive data from the memory
             label=self.sha384_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"384")
+            allow=check_hash_size_given(original_hash,"sha384")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"384")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha384(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1277,21 +1309,29 @@ class sha3_512(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha3_512(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.sha3_512_textinput.text
             #retrive data from the memory
             label=self.sha3_512_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha3_512")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_sha3_512(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.sha3_512_textinput
             #retrive data from the memory
             label=self.sha3_512_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"3_512")
+            allow=check_hash_size_given(original_hash,"sha3_512")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"3_512")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha3_512(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1406,21 +1446,29 @@ class sha3_256(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha3_256(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.sha3_256_textinput.text
             #retrive data from the memory
             label=self.sha3_256_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha3_256")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_sha3_256(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.sha3_256_textinput
             #retrive data from the memory
             label=self.sha3_256_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"3_256")
+            allow=check_hash_size_given(original_hash,"sha3_256")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"3_256")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha3_256(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1534,21 +1582,29 @@ class BLAKE2b(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_blake2b(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.blake2b_textinput.text
             #retrive data from the memory
             label=self.blake2b_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"blake2b")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_blake2b(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.blake2b_textinput
             #retrive data from the memory
             label=self.blake2b_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"BLAKE2b")
+            allow=check_hash_size_given(original_hash,"blake2b")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"BLAKE2b")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_blake2b(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1662,21 +1718,29 @@ class BLAKE2s(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_blake2s(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.blake2s_textinput.text
             #retrive data from the memory
             label=self.blake2s_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"blake2s")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_blake2s(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.blake2s_textinput
             #retrive data from the memory
             label=self.blake2s_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"BLAKE2s")
+            allow=check_hash_size_given(original_hash,"blake2s")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"BLAKE2s")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_blake2s(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1792,21 +1856,29 @@ class RIPEMD_160(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_ripemd_160(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.ripemd_160_textinput.text
             #retrive data from the memory
             label=self.ripemd_160_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"ripemd160")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_ripemd_160(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.ripemd_160_textinput
             #retrive data from the memory
             label=self.ripemd_160_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"RIPEMD-160")
+            allow=check_hash_size_given(original_hash,"ripemd160")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"RIPEMD-160")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_ripemd_160(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -1923,21 +1995,29 @@ class WHirlpool(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_Whirlpool(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.Whirlpool_textinput.text
             #retrive data from the memory
             label=self.Whirlpool_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"whirpool")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_Whirlpool(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.Whirlpool_textinput
             #retrive data from the memory
             label=self.Whirlpool_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"Whirlpool")
+            allow=check_hash_size_given(original_hash,"whirpool")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"Whirlpool")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_Whirlpool(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -2052,21 +2132,29 @@ class sha_1(Screen):
             #show the hash to the user by updating the text in label
             label.text=position(hashed)
         def compare_file_sha_1(instance):
-            data=read_data("file1","rb")
             #original hash
             original_hash=self.sha_1_textinput.text
             #retrive data from the memory
             label=self.sha_1_label
-            label.text=compare(data=data,hashreturned=original_hash)
+            allow=check_hash_size_given(original_hash,"sha1")
+            if allow != False:
+                data=read_data("file1","rb")
+                label.text=compare(data=data,hashreturned=original_hash)
+            else:
+                label.text="input hash does not have the right size"
         def compare_file_string_sha_1(instance):
-            # File to check
-            data=read_data("file1","r")
             #original hash
             original_hash=self.sha_1_textinput
             #retrive data from the memory
             label=self.sha_1_label
             original_hash=original_hash.text
-            label.text=compare_file_string_(data,original_hash,"sha_1")
+            allow=check_hash_size_given(original_hash,"sha1")
+            if allow != False:
+                # File to check
+                data=read_data("file1","r")
+                label.text=compare_file_string_(data,original_hash,"sha_1")
+            else:
+                label.text="input hash does not have the right size"
         def hash_file_sha_1(instance):
             data=read_data("file1","r")
             #retrive data from the memory
@@ -2490,6 +2578,34 @@ def hash_input_to_file(data,algorithm):
         file.write(hashlib.sha1(data.encode()).hexdigest())
     file.close()
     return "hash stored successfully"
+def check_hash_size_given(data1,algorithm):
+    if data1 is not None:
+        if algorithm == "sha512":
+            return len(data1) == 128
+        elif algorithm == "sha256":
+            return len(data1) == 64
+        elif algorithm == "sha384":
+            return len(data1) == 96
+        elif algorithm == "sha3_512":
+            return len(data1) == 128
+        elif algorithm == "sha3_256":
+            return len(data1) == 64
+        elif algorithm == "sha1":
+            return len(data1) == 40
+        elif algorithm == "blake2b":
+            return len(data1) == 128
+        elif algorithm == "blake2s":
+            return len(data1) == 64
+        elif algorithm == "ripemd160":
+            return len(data1) == 40
+        elif algorithm == "whirlpool":
+            return len(data1) == 128
+        elif algorithm == "md5":
+            return len(data1) == 32
+        else:
+            return False
+    else:
+        return False
 #end of main functionality
 #<------------------------------------>
 #Screen Manager
