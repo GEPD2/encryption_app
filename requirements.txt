@@ -1,0 +1,6 @@
+kivy
+matplotlib
+numpy
+pycryptodomex
+whirlpool-py
+cryptography

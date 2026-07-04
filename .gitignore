@@ -1,0 +1,39 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Compiled C reference artifacts (built locally to regenerate KAT vectors)
+kyber_fips203_hardened
+*.o
+*.out
+*.exe
+
+# Local hash/export output produced by the app at runtime
+*_digest.txt
+*_results.txt
+
+# Pre-refactor single-file app, superseded by the package
+encryption_app_pure_python.py
+
+# Editor and OS noise
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
