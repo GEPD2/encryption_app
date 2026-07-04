@@ -47,28 +47,24 @@ class StyledButton(Button):
             "success": SUCCESS,
             "danger": DANGER,
         }.get(role, SURFACE)
-        super().__init__(
-            text=text,
-            background_normal="",
-            background_color=fill,
-            color=TEXT,
-            font_size=FONT_BODY,
-            **kwargs,
-        )
+        # setdefault so a caller can still override any styling token via kwargs
+        # without colliding with the defaults we set here.
+        kwargs.setdefault("background_normal", "")
+        kwargs.setdefault("background_color", fill)
+        kwargs.setdefault("color", TEXT)
+        kwargs.setdefault("font_size", FONT_BODY)
+        super().__init__(text=text, **kwargs)
 
 
 class SectionLabel(Label):
     """A left-aligned category heading."""
 
     def __init__(self, text="", **kwargs):
-        super().__init__(
-            text=text,
-            color=ACCENT,
-            font_size=FONT_HEADING,
-            halign="left",
-            valign="middle",
-            **kwargs,
-        )
+        kwargs.setdefault("color", ACCENT)
+        kwargs.setdefault("font_size", FONT_HEADING)
+        kwargs.setdefault("halign", "left")
+        kwargs.setdefault("valign", "middle")
+        super().__init__(text=text, **kwargs)
         self.bind(size=self._sync_text_size)
 
     def _sync_text_size(self, *_):
@@ -79,14 +75,11 @@ class BodyLabel(Label):
     """Body text that wraps to its own width."""
 
     def __init__(self, text="", muted=False, **kwargs):
-        super().__init__(
-            text=text,
-            color=TEXT_MUTED if muted else TEXT,
-            font_size=FONT_BODY,
-            halign="left",
-            valign="top",
-            **kwargs,
-        )
+        kwargs.setdefault("color", TEXT_MUTED if muted else TEXT)
+        kwargs.setdefault("font_size", FONT_BODY)
+        kwargs.setdefault("halign", "left")
+        kwargs.setdefault("valign", "top")
+        super().__init__(text=text, **kwargs)
         self.bind(size=self._sync_text_size)
 
     def _sync_text_size(self, *_):
